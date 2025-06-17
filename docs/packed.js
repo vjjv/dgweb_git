@@ -30489,6 +30489,7 @@ const captureRenderTarget = document.getElementById('capture-canvas');
 const flipCamera = document.getElementById('flip');
 const intro = document.getElementById('intro-bg');
 var firstTime = true;
+console.log('splashScren : '+window.splashScreen);
 if (window.splashScreen) {
     document.body.addEventListener('click', () => {
         if (firstTime) {
