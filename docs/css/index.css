@@ -1,13 +1,10 @@
-html {
-  max-width: 500px;
-  margin: auto
-}
+
 
 body {
   margin: auto;
   padding: 0;
   overflow: hidden;
-  max-width: 720px;
+  max-width: 500px;
 }
 
 #output-canvas {
