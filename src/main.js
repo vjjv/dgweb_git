@@ -13,7 +13,7 @@ const captureRenderTarget = document.getElementById('capture-canvas');
 const flipCamera = document.getElementById('flip');
 const intro = document.getElementById('intro-bg');
 var firstTime = true;
-console.log('splashScren : '+window.splashScreen);
+console.log('splashScren : ' + window.splashScreen);
 if (window.splashScreen) {
     document.body.addEventListener('click', () => {
         if (firstTime) {
@@ -40,7 +40,7 @@ async function init() {
 
     //V1 Live only, no Capture Render Target
     // const session = await cameraKit.createSession({ liveRenderTarget });
-    
+
     //V2 Live and Capture available : Let Camera Kit create a new canvas, then append it to the DOM
     const canvasContainer = document.getElementById('container');
     const session = await cameraKit.createSession();
@@ -104,7 +104,7 @@ async function updateCamera(session) {
     });
 
     await session.setSource(source);
-
+    
 
     //DEBUG PIXELATE
     const resolutionMultiplier = window.devicePixelRatio;
@@ -122,7 +122,9 @@ async function updateCamera(session) {
         source.setTransform(Transform2D.MirrorX);
     }
 
-    session.play();
+    // session.play();
+    session.play('live');
+    session.play('capture');
     isBackFacing = !isBackFacing;
 }
 
