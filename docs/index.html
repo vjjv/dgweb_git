@@ -70,13 +70,18 @@
   <!-- External Scripts -->
 
   <script>
-    Object.defineProperty(window, 'innerWidth', {
-      configurable: true,
-      get: function () {
-        return 720;  // simulate max width 700px
-      }
-    });
+    function isMobileDevice() {
+      return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
 
+    if (!isMobileDevice()) {
+      Object.defineProperty(window, 'innerWidth', {
+        configurable: true,
+        get: function () {
+          return 720;  // simulate max width 700px
+        }
+      });
+    }
   </script>
 
   <script src="./lensID.js"></script>
