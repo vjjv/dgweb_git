@@ -30489,15 +30489,20 @@ const captureRenderTarget = document.getElementById('capture-canvas');
 const flipCamera = document.getElementById('flip');
 const intro = document.getElementById('intro-bg');
 var firstTime = true;
-document.body.addEventListener('click', () => {
-    if (firstTime) {
-        firstTime = false;
-        if (DeviceMotionEvent) if (typeof DeviceMotionEvent.requestPermission === 'function') DeviceMotionEvent.requestPermission();
-        intro.style.display = 'none';
-        init();
-    }
-}, true);
-
+if(window.splashScreen){
+    document.body.addEventListener('click', () => {
+        if (firstTime) {
+            firstTime = false;
+            if (DeviceMotionEvent) if (typeof DeviceMotionEvent.requestPermission === 'function') DeviceMotionEvent.requestPermission();
+            intro.style.display = 'none';
+            init();
+        }
+    }, true);
+    
+}else{
+    intro.style.display = 'none';
+    init();
+}
 
 let isBackFacing = !window.modeStartFaceCamera;
 let mediaStream;
