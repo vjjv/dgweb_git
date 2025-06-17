@@ -55,6 +55,11 @@ function waitForElement(id) {
 // Use an async to await the element before running your main code
 (async () => {
   const canvas = await waitForElement('canvas');
+  
+  const offscreen = canvas.transferControlToOffscreen();
+  // Set size on offscreen canvas, not on original canvas element
+  // offscreen.width = 500;
+  // offscreen.height = 300;
 
 
   // Initialize variables
@@ -350,10 +355,12 @@ function waitForElement(id) {
   }
 
   function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    zoomOriginX = canvas.width / 2;
-    zoomOriginY = canvas.height / 2;
+    offscreen.width = window.innerWidth; //baba
+    offscreen.height = window.innerHeight; //baba
+    // zoomOriginX = canvas.width / 2; 
+    // zoomOriginY = canvas.height / 2; 
+    zoomOriginX = offscreen.width / 2; 
+    zoomOriginY = offscreen.height / 2; 
   }
 
   // Initialize canvas size and start animation
