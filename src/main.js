@@ -16,7 +16,7 @@ var firstTime = true;
 document.body.addEventListener('click', () => {
     if (firstTime) {
         firstTime = false;
-        if (typeof DeviceMotionEvent.requestPermission === 'function') DeviceMotionEvent.requestPermission();
+        if (DeviceMotionEvent) if (typeof DeviceMotionEvent.requestPermission === 'function') DeviceMotionEvent.requestPermission();
         intro.style.display = 'none';
         init();
     }
