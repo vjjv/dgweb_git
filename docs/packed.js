@@ -30513,8 +30513,17 @@ async function init() {
         apiToken: 'eyJhbGciOiJIUzI1NiIsImtpZCI6IkNhbnZhc1MyU0hNQUNQcm9kIiwidHlwIjoiSldUIn0.eyJhdWQiOiJjYW52YXMtY2FudmFzYXBpIiwiaXNzIjoiY2FudmFzLXMyc3Rva2VuIiwibmJmIjoxNzM4MjM2Njg5LCJzdWIiOiJmYWMzYWZjOS0zOTEyLTRlNTUtYTdiZS03MjJlOGRmYWY4ZjV-UFJPRFVDVElPTn5lOGQ0OTM1NS00YmNlLTRiYWEtODkzNC1lMWNlNmU0ZDM5M2IifQ.6sZB_6aFPL8OW-UO3Y37P7Rev7mzjS9IhNRFk7NelBI',
     });
 
-    const session = await cameraKit.createSession({ liveRenderTarget });
+    //V1 Live only, no Capture Render Target
+    // const session = await cameraKit.createSession({ liveRenderTarget });
+    
+    //V2 Live and Capture available : Let Camera Kit create a new canvas, then append it to the DOM
+    const canvasContainer = document.getElementById('canvas-container');
+    const session = await cameraKit.createSession();
+    // canvasContainer.appendChild(session.output.live);
+    liveRenderTarget.replaceWith(session.output.capture);
     captureRenderTarget.replaceWith(session.output.capture);
+
+
 
     //Load via Lens Group
     // const { lenses } = await cameraKit.lensRepository.loadLensGroups([
@@ -30555,8 +30564,10 @@ async function updateCamera(session) {
 
     mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
-            width: { ideal: 1280 },
-            height: { ideal: 720 },
+            width: { ideal: 4096 },
+            height: { ideal: 2160 },
+            // width: { ideal: 1280 },
+            // height: { ideal: 720 },
             facingMode: isBackFacing ? 'environment' : 'user',
         },
     });
