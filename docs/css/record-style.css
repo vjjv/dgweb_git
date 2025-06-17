@@ -69,7 +69,7 @@
     height: 100%;
     transition: width var(--transition-speed) ease,
       height var(--transition-speed) ease, opacity var(--transition-speed) ease;
-    display: none;
+    /* display: none; */
     user-select: none;
     z-index: 10;
     user-select: none;
