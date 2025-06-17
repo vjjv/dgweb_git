@@ -41,7 +41,7 @@ async function init() {
     // const session = await cameraKit.createSession({ liveRenderTarget });
     
     //V2 Live and Capture available : Let Camera Kit create a new canvas, then append it to the DOM
-    const canvasContainer = document.getElementById('canvas-container');
+    const canvasContainer = document.getElementById('container');
     const session = await cameraKit.createSession();
     canvasContainer.appendChild(session.output.live);
     // liveRenderTarget.replaceWith(session.output.capture);
