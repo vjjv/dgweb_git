@@ -25,8 +25,9 @@ window.groupID = getURLorFallback('groupID', 'f7f4e367-f4b3-4de5-8e81-e9c842f2bf
 window.modePhoto = getURLorFallback('modePhoto', true);
 window.modeVideo = getURLorFallback('modeVideo', true);
 window.modeBothCamera = getURLorFallback('modeBothCamera', true);
-window.modeStartFaceCamera = getURLorFallback('modeStartFaceCamera', true);
-window.splashScreen = getURLorFallback(undefined, 'https://vjjv.github.io/reli3f_git/assets/intro.png');
+window.modeStartFaceCamera = getURLorFallback('modeStartFaceCamera', false);
+window.splashScreen = getURLorFallback('splashScreen', undefined);
+
 
 console.log('lensID : ' + window.lensID);
 console.log('groupID : ' + window.groupID);
