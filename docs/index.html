@@ -16,7 +16,7 @@
   <div id="intro-bg">
     <div id="intro-card"><img id="splash-img" src="" alt=""></div>
     <!-- HTML !-->
-  <button class="button-1" role="button">START</button>
+    <button class="button-1" role="button">START</button>
 
 
   </div>
@@ -69,6 +69,16 @@
 
   <!-- External Scripts -->
 
+  <script>
+    Object.defineProperty(window, 'innerWidth', {
+      configurable: true,
+      get: function () {
+        return 600;  // simulate max width 700px
+      }
+    });
+
+  </script>
+
   <script src="./lensID.js"></script>
   <script src="./packed.js"></script>
   <script src="js/resizeSvg.js"></script>
@@ -78,5 +88,3 @@
 </body>
 
 </html>
-
-
