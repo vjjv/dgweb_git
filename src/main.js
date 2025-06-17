@@ -105,6 +105,7 @@ async function updateCamera(session) {
         cameraType: isBackFacing ? 'back' : 'front',
     });
 
+    source.setRenderSize(1000, 500);
     await session.setSource(source);
     
 
