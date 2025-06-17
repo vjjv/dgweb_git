@@ -96,6 +96,11 @@ async function updateCamera(session) {
     const width = window.innerWidth * resolutionMultiplier;
     const height = window.innerHeight * resolutionMultiplier;
     source.setRenderSize(width, height);
+    console.log('Pixelate Debug')
+    console.log('window.devicePixelRatio : '+window.devicePixelRatio)
+    console.log('window.innerWidth : '+window.innerWidth)
+    console.log('window.innerHeight : '+window.innerHeight)
+    console.log('source.setRenderSize(width, height) : '+window.innerWidth * resolutionMultiplier+ ', '+window.innerHeight * resolutionMultiplier)
     //END DEBUG
 
     if (!isBackFacing) {
