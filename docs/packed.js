@@ -30651,7 +30651,8 @@ async function updateCamera(session) {
             // Create image element
             const img = document.createElement('img');
             img.src = dataURL;
-            img.style.maxWidth = '100%';
+            img.style.maxHeight = '100%';
+            // img.style.maxWidth = '100%';
             // Replace canvas with image
             canvas.parentElement.insertBefore(img, canvas);
             canvas.style.display = 'none';
