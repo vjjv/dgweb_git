@@ -182,7 +182,7 @@ body {
 .btn-capture {
   z-index: 21;
   width: 50px;
-  transform: translateX(50%);
+  /* transform: translateX(50%); */
   display: none;
 }
 
@@ -196,8 +196,8 @@ body {
 }
 
 #btn-back {
-  margin-left: 2rem;
-  margin-top: 0.5rem;
+  /* margin-left: 2rem; */
+  /* margin-top: 0.5rem; */
   cursor: pointer;
   max-width: 50px
 }
