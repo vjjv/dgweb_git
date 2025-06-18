@@ -105,9 +105,8 @@ async function updateCamera(session) {
         cameraType: isBackFacing ? 'back' : 'front',
     });
 
-    source.setRenderSize(500, 250);
     await session.setSource(source);
-    
+
 
     //DEBUG PIXELATE
     const resolutionMultiplier = window.devicePixelRatio;
@@ -125,10 +124,76 @@ async function updateCamera(session) {
         source.setTransform(Transform2D.MirrorX);
     }
 
-    // session.play();
-    session.play('live');
-    session.play('capture');
     isBackFacing = !isBackFacing;
+
+
+
+
+    session.play('live'); // Start live output on "live-canvas"
+    session.pause('capture'); // Pause capture output on "canvas"
+
+    document.getElementById('captureButton').addEventListener('click', function () {
+        // Pause live output
+        session.pause('live');
+        // Play capture output
+        session.play('capture');
+        // Hide live canvas
+        document.getElementById('live-canvas').style.display = 'none';
+        // Show capture canvas
+        document.getElementById('canvas').style.display = '';
+        // Hide capture button
+        this.style.display = 'none';
+
+        // Function to take a screenshot and replace canvas with image
+        function replaceCanvasWithScreenshot() {
+            // Get data URL from canvas
+            const canvas = document.getElementById('canvas');
+            const dataURL = canvas.toDataURL('image/png');
+            // Create image element
+            const img = document.createElement('img');
+            img.src = dataURL;
+            img.style.maxWidth = '100%';
+            // Replace canvas with image
+            canvas.parentElement.insertBefore(img, canvas);
+            canvas.style.display = 'none';
+
+            // Show action buttons
+            document.getElementById('btn-back').style.display = 'block';
+            document.getElementById('btn-download').style.display = 'block';
+
+            // Set up download button
+            document.getElementById('btn-download').addEventListener('click', function () {
+                const a = document.createElement('a');
+                a.href = dataURL;
+                a.download = 'photo.png';
+                a.click();
+            });
+
+            // Set up back button: revert to first state
+            document.getElementById('btn-back').addEventListener('click', function () {
+                // Remove the screenshot image if present
+                if (img.parentElement) img.parentElement.removeChild(img);
+                // Show live canvas, hide capture canvas
+                document.getElementById('live-canvas').style.display = 'block';
+                document.getElementById('canvas').style.display = 'none';
+                // Show capture button, hide action buttons
+                document.getElementById('captureButton').style.display = 'block';
+                document.getElementById('btn-back').style.display = 'none';
+                document.getElementById('btn-download').style.display = 'none';
+                // Resume live output, pause capture output
+                session.play('live');
+                session.pause('capture');
+            });
+        }
+
+        // Wait a moment to ensure canvas content is rendered, then take screenshot
+        setTimeout(replaceCanvasWithScreenshot, 100);
+    });
+
+
+
+
+
 }
 
 // init();

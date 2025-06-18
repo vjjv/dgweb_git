@@ -12,15 +12,8 @@ const videoProgressBar = document.getElementById("videoProgressBar");
 const progressRing = document.getElementById("progressRing");
 const controlPannel = document.querySelector(".controls");
 
-if (!window.modePhoto && !window.modeVideo) {
-  captureButton.style.display = 'none';
-}
 
-if (window.modeBothCamera) {
-  flipButton.style.display = 'block';
-} else {
-  flipButton.style.display = 'none';
-}
+
 
 
 

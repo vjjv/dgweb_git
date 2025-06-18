@@ -38,3 +38,5 @@ console.log('modeStartFaceCamera : ' + window.modeStartFaceCamera);
 console.log('splashScreen : ' + window.splashScreen);
 
 document.getElementById('splash-img').src = window.splashScreen;
+document.getElementById('flip').style.display = window.modeBothCamera ? "block" : "none";
+document.getElementById('captureButton').style.display = !window.modePhoto && !window.modeVideo ? "none" : "flex";
