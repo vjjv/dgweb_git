@@ -78,7 +78,8 @@ canvas {
   -ms-user-select: none;
   -o-user-select: none;
   --webkit-tap-highlight-color: transparent;
-  object-fit: contain;
+  object-fit: contain; 
+  /* or contain */
 }
 
 /* Class to display active elements */

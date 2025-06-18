@@ -12,7 +12,7 @@
 
 <body>
 
-  <div id="flip" class="reverse-cam"><img src="assets/reverse-cam.png" alt=""></div>
+  <div id="flip" class="reverse-cam"><img id="reverse-cam" width='0' height="0" src="assets/reverse-cam.png" alt=""></div>
   <div id="intro-bg">
     <div id="intro-card">
       <img id="intro-logo" src="assets/logo.png" alt="">
@@ -106,12 +106,32 @@
       return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     }
 
+    // if (!isMobileDevice()) {
+    //   Object.defineProperty(window, 'innerWidth', {
+    //     configurable: true,
+    //     get: function () {
+    //       return 720;  // simulate max width 700px
+    //     }
+    //   });
+    // }
+
     if (!isMobileDevice()) {
+      const targetWidth = 720;
+      const targetHeight = Math.round(targetWidth * (16 / 9));; // For 16:9 landscape, this is backwards—see note below
+
+      // Clarification: For 16:9 LANDSCAPE, you want width: 16, height: 9, so:
+      // const targetHeight = Math.round(targetWidth * (9 / 16));
+      // For 9:16 PORTRAIT, you want width: 9, height: 16, so:
+      // const targetHeight = Math.round(targetWidth * (16 / 9));
+
+      // Enforce the ratio by overriding both properties
       Object.defineProperty(window, 'innerWidth', {
         configurable: true,
-        get: function () {
-          return 720;  // simulate max width 700px
-        }
+        get: function () { return targetWidth; }
+      });
+      Object.defineProperty(window, 'innerHeight', {
+        configurable: true,
+        get: function () { return targetHeight; }
       });
     }
   </script>
