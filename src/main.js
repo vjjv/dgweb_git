@@ -133,18 +133,41 @@ async function updateCamera(session) {
     session.pause('capture'); // Pause capture output on "canvas"
 
     document.getElementById('captureButton').addEventListener('click', function () {
-        // Pause live output
-        session.pause('live');
-        // Play capture output
         session.play('capture');
-        // Hide live canvas
-        document.getElementById('live-canvas').style.display = 'none';
-        // Show capture canvas
-        document.getElementById('canvas').style.display = '';
-        // Hide capture button
-        this.style.display = 'none';
+        session.pause('live');
+        setTimeout(e=>{
+            document.getElementById('canvas').style.display = 'block';
+            document.getElementById('live-canvas').style.display = 'none';
+            this.style.display = 'none';
+        },100)
 
-        // Function to take a screenshot and replace canvas with image
+        const countdownEl = document.getElementById('countdown');
+        const countdownNumber = document.querySelector('.countdown-number');
+        const circle = document.querySelector('.countdown-circle circle');
+        countdownEl.style.display = 'block';
+        countdownNumber.textContent = '3';
+
+        // Start circle animation
+        circle.style.animation = 'none';
+        void circle.offsetWidth; // Force reflow
+        circle.style.animation = 'countdown 3s linear forwards';
+
+        let count = 3;
+        const intervalId = setInterval(function () {
+            count--;
+            countdownNumber.textContent = count;
+            if (count <= 0) {
+                clearInterval(intervalId);
+                countdownEl.style.display = 'none';
+
+
+                triggerFlash();
+
+                replaceCanvasWithScreenshot();
+            }
+        }, 1000);
+
+
         function replaceCanvasWithScreenshot() {
             // Get data URL from canvas
             const canvas = document.getElementById('canvas');
@@ -165,7 +188,7 @@ async function updateCamera(session) {
             document.getElementById('btn-download').addEventListener('click', function () {
                 const a = document.createElement('a');
                 a.href = dataURL;
-                a.download = 'photo.png';
+                a.download = 'Dolce&Gabbana-VTO.png';
                 a.click();
             });
 
@@ -185,12 +208,31 @@ async function updateCamera(session) {
                 session.pause('capture');
             });
         }
-
-        // Wait a moment to ensure canvas content is rendered, then take screenshot
-        setTimeout(replaceCanvasWithScreenshot, 100);
     });
 
+    function triggerFlash() {
+        const flash = document.getElementById('flash-overlay');
+        // Reset to 0 opacity and clear any animation/transition
+        flash.style.opacity = '0';
+        flash.style.transition = 'none';
 
+        // Force reflow
+        void flash.offsetWidth;
+
+        // First: fade in (0 to 1 in 0.3s linear)
+        flash.style.transition = 'opacity 0.3s linear';
+        flash.style.opacity = '1';
+
+        // After 0.3s, start fade out (1 to 0 in 3s ease-out)
+        setTimeout(() => {
+            flash.style.transition = 'opacity 3s ease-out';
+            flash.style.opacity = '0';
+            // Optional: reset transition after animation
+            setTimeout(() => {
+                flash.style.transition = 'none';
+            }, 3000);
+        }, 300);
+    }
 
 
 
