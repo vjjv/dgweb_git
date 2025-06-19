@@ -26,7 +26,7 @@ window.modePhoto = getURLorFallback('modePhoto', true);
 window.modeVideo = getURLorFallback('modeVideo', false);
 window.modeBothCamera = getURLorFallback('modeBothCamera', false);
 window.modeStartFaceCamera = getURLorFallback('modeStartFaceCamera', true);
-window.splashScreen = getURLorFallback('splashScreen', 1); //change undefined to whatever to show intro
+window.splashScreen = getURLorFallback('splashScreen', undefined); //change undefined to whatever to show intro
 
 
 console.log('lensID : ' + window.lensID);
