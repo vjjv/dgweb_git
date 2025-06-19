@@ -315,6 +315,11 @@ body {
   z-index: 100;
   /* Enlarge the whole countdown */
 }
+@media (max-width: 767px) {
+  #countdown {
+    transform: scale(3) translateY(-10%);
+  }
+}
 
 .countdown-number {
   position: absolute;
