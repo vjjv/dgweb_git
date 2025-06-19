@@ -150,9 +150,11 @@ body {
   /* max-width: min(80vw, 720px); */
   max-width: min(100vw, 720px);
   max-height: 100vh;
+  max-height: 100dvh;
   /* This ensures the card is as big as possible, but always fits */
   /* width: min(80vw, 720px, calc(100vh * 9/16)); */
   width: min(100vw, 720px, calc(100vh * 9/16));
+  width: min(100vw, 720px, calc(100dvh * 9/16));
   /* This is the magic: limits width to not exceed what 9:16 allows for current viewport height */
 }
 
@@ -222,6 +224,7 @@ body {
   z-index: 21;
   width: 100%;
   min-height: 100vh;
+  min-height: 100dvh;
   position: relative;
   pointer-events: none;
   /* height: 100%; */
@@ -365,6 +368,7 @@ body {
   /* left: 0; */
   width: 100%;
   height: 100vh;
+  height: 100dvh;
   background: white;
   opacity: 0;
   pointer-events: none;
