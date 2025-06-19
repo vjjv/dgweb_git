@@ -273,7 +273,12 @@ body {
 }
 
 #intro-spacer {
-  height: 5vh;
+  height: 15vh;
+}
+@media (max-width: 767px) {
+  #intro-spacer {
+    height: 5vh;
+  }
 }
 
 .intro-text {
