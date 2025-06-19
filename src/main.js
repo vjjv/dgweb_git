@@ -79,6 +79,10 @@ function bindFlipCamera(session) {
     updateCamera(session);
 }
 
+function isMobileDevice() {
+    return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
 async function updateCamera(session) {
 
     // flipCamera.innerText = isBackFacing
@@ -90,15 +94,19 @@ async function updateCamera(session) {
         mediaStream.getVideoTracks()[0].stop();
     }
 
-    mediaStream = await navigator.mediaDevices.getUserMedia({
-        video: {
-            // width: { ideal: 4096 },
-            // height: { ideal: 2160 },
-            // width: { ideal: 1280 },
-            // height: { ideal: 720 },
-            facingMode: isBackFacing ? 'environment' : 'user',
-        },
-    });
+    if (isMobileDevice) {
+        mediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: isBackFacing ? 'environment' : 'user', }, });
+    } else {
+        mediaStream = await navigator.mediaDevices.getUserMedia({
+            video: {
+                width: { ideal: 4096 },
+                height: { ideal: 2160 },
+                // width: { ideal: 1280 },
+                // height: { ideal: 720 },
+                facingMode: isBackFacing ? 'environment' : 'user',
+            },
+        });
+    }
 
     const source = createMediaStreamSource(mediaStream, {
         // NOTE: This is important for world facing experiences
@@ -137,11 +145,11 @@ async function updateCamera(session) {
     document.getElementById('captureButton').addEventListener('click', function () {
         session.play('capture');
         session.pause('live');
-        setTimeout(e=>{
+        setTimeout(e => {
             document.getElementById('canvas').style.display = 'block';
             document.getElementById('live-canvas').style.display = 'none';
             this.style.display = 'none';
-        },100)
+        }, 100)
 
         const countdownEl = document.getElementById('countdown');
         const countdownNumber = document.querySelector('.countdown-number');
