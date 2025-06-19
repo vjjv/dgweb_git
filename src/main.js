@@ -92,8 +92,8 @@ async function updateCamera(session) {
 
     mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
-            width: { ideal: 4096 },
-            height: { ideal: 2160 },
+            // width: { ideal: 4096 },
+            // height: { ideal: 2160 },
             // width: { ideal: 1280 },
             // height: { ideal: 720 },
             facingMode: isBackFacing ? 'environment' : 'user',
