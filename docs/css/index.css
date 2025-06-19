@@ -269,11 +269,11 @@ body {
 
 #intro-logo {
   /* width: 30vh; */
-  height: 25vh;
+  height: 22vh;
 }
 
 #intro-spacer {
-  height: 15vh;
+  height: 10vh;
 }
 
 .intro-text {
@@ -283,11 +283,11 @@ body {
 }
 
 #intro-text-1 {
-  font-size: 3vh;
+  font-size: 2.8vh;
 }
 
 #intro-text-2 {
-  font-size: 2.5vh;
+  font-size: 2.4vh;
 }
 
 #intro-text-3 {
