@@ -237,6 +237,7 @@ body {
   margin: 4vh 0 0 1vh;
   pointer-events: auto;
   cursor: pointer;
+  position: absolute;
 }
 
 #btn-download {
@@ -290,7 +291,7 @@ body {
 }
 
 #ui-countdown {
-  z-index: 1;
+  /* z-index: 1; */
   position: absolute;
   font-size: 10rem;
   font-family: 'FuturaLTProMedium', sans-serif;
@@ -306,6 +307,7 @@ body {
   /* Hidden by default */
   transform: scale(7.5) translateY(-10%);
   top: 50vh;
+  z-index: 100;
   /* Enlarge the whole countdown */
 }
 

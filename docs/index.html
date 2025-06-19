@@ -39,6 +39,23 @@
       <div id="btn-back" class="btn-capture"><img src="assets/btn_back.png" alt=""></div>
       <div id="flash-overlay"></div>
       <div id="btn-download" class="btn-capture"><img src="assets/btn_download.png" alt=""></div>
+            <!-- Capture Section -->
+      <section id="canvas-part" class="canvas-part">
+        <!-- Progress Bar -->
+        <div class="progress-bar" id="progressBar"></div>
+        <!-- Canvas -->
+        <!-- <canvas id="canvas" class="active"></canvas> -->
+        <!-- <canvas id="capture-canvas" class="active"></canvas> -->
+
+        <!-- Capture Button with SVG -->
+        <div class="capture-btn" id="captureButton">
+          <svg id="progressRing" class="progress-ring" xmlns="http://www.w3.org/2000/svg">
+            <circle class="outer-circle" stroke="rgba(255, 255, 255,0.9)" stroke-width="3" fill="none" />
+            <circle class="progress-ring__circle" stroke="rgb(255, 255, 255)" stroke-width="3" fill="none" />
+            <circle class="inner-circle" fill="rgba(255, 255, 255,0.9)" />
+          </svg>
+        </div>
+      </section>
     </div>
     <div id="ui-countdown" class="ui-countdowns">
       <div id="countdown">
@@ -50,10 +67,6 @@
       </div>
 
     </div>
-    <div id="flash-overlay-container">
-      
-    </div>
-
 
 
     <!-- Preview Section -->
@@ -79,23 +92,7 @@
         </div>
       </section>
 
-      <!-- Capture Section -->
-      <section id="canvas-part" class="canvas-part">
-        <!-- Progress Bar -->
-        <div class="progress-bar" id="progressBar"></div>
-        <!-- Canvas -->
-        <!-- <canvas id="canvas" class="active"></canvas> -->
-        <!-- <canvas id="capture-canvas" class="active"></canvas> -->
 
-        <!-- Capture Button with SVG -->
-        <div class="capture-btn" id="captureButton">
-          <svg id="progressRing" class="progress-ring" xmlns="http://www.w3.org/2000/svg">
-            <circle class="outer-circle" stroke="rgba(255, 255, 255,0.9)" stroke-width="3" fill="none" />
-            <circle class="progress-ring__circle" stroke="rgb(255, 255, 255)" stroke-width="3" fill="none" />
-            <circle class="inner-circle" fill="rgba(255, 255, 255,0.9)" />
-          </svg>
-        </div>
-      </section>
     </div>
 
     <div class="poweredbysnap-logo">

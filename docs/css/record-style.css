@@ -51,10 +51,6 @@ html {
 
 /* Centering and scaling canvas part */
 .canvas-part {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   width: 100%;
   /* max-width: 720px; baba*/
   height: 100%;
@@ -65,6 +61,7 @@ html {
   -webkit-user-select: none;
   user-select: none;
   text-align: center;
+  pointer-events: auto;
 }
 
 /* Canvas styling */
