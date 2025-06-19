@@ -3,7 +3,8 @@
   --bg-color: #000;
   --border-radius: 20px;
   --transition-speed: 0.5s;
-  --control-size: 90px;
+  --control-size: 10vh;
+  /* --control-size: 90px; */
   --button-color: orangered;
   --button-shadow: rgba(0, 0, 0, 0.3);
   --progress-bar-height: 2px;
@@ -27,6 +28,8 @@ html {
   align-items: center;
 }
 
+
+
 .container {
   background-color: var(--bg-color);
   --webkit-tap-highlight-color: rgba(0, 0, 0, 0);
@@ -36,7 +39,7 @@ html {
   justify-content: center;
   align-items: center;
   height: 100%;
-  width: 100%;
+  /* width: 100%; */
   /* max-width: 720px; baba*/ 
 }
 

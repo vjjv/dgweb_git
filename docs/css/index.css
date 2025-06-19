@@ -60,17 +60,17 @@ body {
 
 .poweredbysnap-logo {
   width: 100%;
-  position: absolute;
-  bottom: 5px;
+  /* bottom: 0.5vh; */
   display: flex;
   align-items: center;
-  justify-content: center;
+  /* justify-content: center; */
   z-index: 1;
 }
 
 .poweredbysnap-logo>img {
-  width: 75px;
-  opacity: 0.5;
+  width: 8vh;
+  opacity: 0.8;
+  margin: 0 0 0.5vh 1vh;
 }
 
 #flip {
@@ -91,9 +91,9 @@ body {
 
 #intro-bg {
   width: 100%;
-  height: 100%;
+  /* height: 100%; */
   z-index: 1;
-  position: absolute;
+  /* position: absolute; */
   /* background-image: url("../assets/blur-bg.png"); */
   ;
   background-repeat: no-repeat;
@@ -106,22 +106,54 @@ body {
   flex-direction: column;
 }
 
-#intro-card {
-  width: 80%;
+/* #intro-card { */
+/* width: 80%;
   height: 100%;
   max-width: 720px;
   background-color: #EEEEEE;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-between; */
 
 
-  /* background-color: red; */
-  /* -webkit-box-shadow:0px 0px 48px 6px rgba(0,0,0,0.9);
+
+/* background-color: red; */
+/* -webkit-box-shadow:0px 0px 48px 6px rgba(0,0,0,0.9);
   -moz-box-shadow: 0px 0px 48px 6px rgba(0,0,0,0.9);
   box-shadow: 0px 0px 48px 6px rgba(0,0,0,0.9); */
+/* } */
+
+#intro-card {
+  /* aspect-ratio: 9/16; */
+  background-color: #EEEEEE;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  /* These two lines ensure the card never exceeds the viewport */
+  /* max-width: min(80vw, 720px); */
+  /* max-height: 100vh; */
+  /* This ensures the card is as big as possible, but always fits */
+  /* width: min(80vw, 720px, calc(100vh * 9/16)); */
+  /* This is the magic: limits width to not exceed what 9:16 allows for current viewport height */
 }
+
+#container-9-16 {
+  aspect-ratio: 9/16;
+  background-color: #EEEEEE;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  /* These two lines ensure the card never exceeds the viewport */
+  max-width: min(80vw, 720px);
+  max-height: 100vh;
+  /* This ensures the card is as big as possible, but always fits */
+  width: min(80vw, 720px, calc(100vh * 9/16));
+  /* This is the magic: limits width to not exceed what 9:16 allows for current viewport height */
+}
+
 
 #intro-card img {
   /* width: 100%; */
@@ -140,14 +172,12 @@ body {
   cursor: pointer;
   display: inline-block;
   font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 14px;
   font-weight: 500;
-  height: 40px;
-  line-height: 20px;
+  line-height: 2.5vh;
   list-style: none;
   margin: 0;
   outline: none;
-  padding: 10px 16px;
+  padding: 1vh 1.6vh;
   position: relative;
   text-align: center;
   text-decoration: none;
@@ -159,8 +189,8 @@ body {
   /* margin: 10px; */
   z-index: 22;
   margin: 10px 50px;
-  height: 5rem;
-  font-size: 1.5rem;
+  height: 5vh;
+  font-size: 2.5vh;
   width: 90%;
 }
 
@@ -181,13 +211,18 @@ body {
 
 .btn-capture {
   z-index: 21;
-  width: 50px;
+  /* width: 50px; */
   /* transform: translateX(50%); */
   display: none;
 }
 
 #ui-capture {
   z-index: 21;
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+  pointer-events: none;
+  /* height: 100%; */
 }
 
 #btn-cross {
@@ -199,21 +234,27 @@ body {
   /* margin-left: 2rem; */
   /* margin-top: 0.5rem; */
   cursor: pointer;
-  max-width: 50px
+  margin: 4vh 0 0 1vh;
+  pointer-events: auto;
+  cursor: pointer;
 }
 
 #btn-download {
   position: absolute;
-  bottom: 20px;
+  bottom: 1.5vh;
   left: 50%;
   transform: translateX(-50%);
-  width: 5rem;
+  pointer-events: auto;
   cursor: pointer;
-  max-width: 75px;
+}
+
+#btn-download img {
+  width: 7vh;
 }
 
 .btn-capture img {
-  width: 100%;
+  width: 5vh;
+
 }
 
 #splash-img {
@@ -221,31 +262,31 @@ body {
 }
 
 #intro-logo {
-  width: 40%;
-  height: auto;
+  /* width: 30vh; */
+  height: 25vh;
 }
 
 #intro-spacer {
-  height: 40%;
+  height: 15vh;
 }
 
 .intro-text {
   text-align: center;
-  width: 70%;
+  width: 80%;
   font-family: 'FuturaLTProMedium', sans-serif;
 }
 
 #intro-text-1 {
-  font-size: 175%;
+  font-size: 3vh;
 }
 
 #intro-text-2 {
-  font-size: 155%;
+  font-size: 2.5vh;
 }
 
 #intro-text-3 {
-  font-size: 155%;
-  margin: 2rem 0;
+  font-size: 1.5vh;
+  margin: 1vh 0;
 }
 
 #ui-countdown {
@@ -253,6 +294,7 @@ body {
   position: absolute;
   font-size: 10rem;
   font-family: 'FuturaLTProMedium', sans-serif;
+  height: 100%;
 }
 
 #countdown {
@@ -262,7 +304,8 @@ body {
   margin: 10px auto;
   display: none;
   /* Hidden by default */
-  transform: scale(7.5);
+  transform: scale(7.5) translateY(-10%);
+  top: 50vh;
   /* Enlarge the whole countdown */
 }
 
@@ -291,9 +334,10 @@ body {
 .countdown-circle .static-circle {
   fill: none;
   stroke: #fff;
-  stroke-width: 0.5px; 
+  stroke-width: 0.5px;
   /* inverted idk why */
 }
+
 .countdown-circle circle {
   fill: none;
   stroke: #fff;
@@ -315,22 +359,28 @@ body {
   position: absolute;
   top: 0;
   /* left: 0; */
-  width: 720px;
-  height: 100%;
+  width: 100%;
+  height: 100vh;
   background: white;
   opacity: 0;
   pointer-events: none;
   z-index: 9999;
-  animation: none; /* Reset by default */
-  
+  animation: none;
+  pointer-events: none;
+  /* Reset by default */
+
 }
+
 @keyframes flash {
   0% {
     opacity: 0;
   }
-  9% { /* 0.3s / 3.3s ≈ 9% */ 
+
+  9% {
+    /* 0.3s / 3.3s ≈ 9% */
     opacity: 1;
   }
+
   100% {
     opacity: 0;
   }

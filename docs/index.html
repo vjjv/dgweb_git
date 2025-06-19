@@ -11,93 +11,97 @@
 </head>
 
 <body>
-
-  <div id="flip" class="reverse-cam"><img id="reverse-cam" width='0' height="0" src="assets/reverse-cam.png" alt=""></div>
-  <div id="intro-bg">
-    <div id="intro-card">
-      <img id="intro-logo" src="assets/logo.png" alt="">
-      <div id="intro-text-1" class="intro-text">
-        VIRTUAL TRY ON <br><br>
-        Discover your perfect look in real time<br><br>
-      </div>
-      <div id="intro-text-2" class="intro-text">
-        To personalize your experience, we'll access your device camera. <br><br>
-        Your imae will be processed only to display the selected look and will not be saved or shared.<br><br>
-      </div>
-      <div id="intro-spacer"></div>
-
-      <button class="button-1" role="button">Agree and Proceed</button>
-      <button class="button-1" role="button">Cancel</button>
-      <div id="intro-text-3" class="intro-text">
-        By continuing, you confirm you are at least 16 years old and accept our <u>Privacy Policy.</u><br><br>
-      </div>
-    </div>
-    <!-- HTML !-->
-  </div>
-  <div id="ui-capture">
-    <div id="btn-cross" class="btn-capture"><img src="assets/btn_cross.png" alt=""></div>
-    <div id="btn-back" class="btn-capture"><img src="assets/btn_back.png" alt=""></div>
-  </div>
-  <div id="btn-download" class="btn-capture"><img src="assets/btn_download.png" alt=""></div>
-  <div id="ui-countdown" class="ui-countdowns">
-    <div id="countdown">
-      <span class="countdown-number"></span>
-      <svg class="countdown-circle" viewBox="0 0 40 40">
-        <circle class="static-circle" cx="20" cy="20" r="18" />
-        <circle cx="20" cy="20" r="18"></circle>
-      </svg>
-    </div>
-
-  </div>
-  <div id="flash-overlay"></div>
-
-
-  <!-- Preview Section -->
-  <div id="container" class="container">
-    <section id="preview-part" class="preview-part">
-      <img src="assets/spin.gif" alt="loading" class="spin-loading" style="display: none" />
-      <div class="preview">
-        <!-- Video Progress Bar -->
-        <div class="progress-parent">
-          <div class="video-progress-bar-sudo">
-            <div class="video-progress-bar" id="videoProgressBar"></div>
-          </div>
+  <div id="container-9-16">
+    <div id="flip" class="reverse-cam"><img id="reverse-cam" width='0' height="0" src="assets/reverse-cam.png" alt=""></div>
+    <div id="intro-bg">
+      <div id="intro-card">
+        <img id="intro-logo" src="assets/logo.png" alt="">
+        <div id="intro-text-1" class="intro-text">
+          VIRTUAL TRY ON <br><br>
+          Discover your perfect look in real time<br><br>
         </div>
-        <!-- Preview Image or Canvas -->
-        <img src="" alt="Preview Image" id="preview-img" class="preview-img" />
-        <canvas id="videoCanvas" class="video-canvas"></canvas>
-      </div>
-      <!-- Control Bar -->
-      <div class="controls">
-        <!-- Back Button -->
-        <img src="assets/back.png" alt="Back" class="back-btn" id="backButton" />
-        <!-- Action Button will be dynamically added here -->
-      </div>
-    </section>
+        <div id="intro-text-2" class="intro-text">
+          To personalize your experience, we'll access your device camera. <br><br>
+          Your imae will be processed only to display the selected look and will not be saved or shared.<br><br>
+        </div>
+        <div id="intro-spacer"></div>
 
-    <!-- Capture Section -->
-    <section id="canvas-part" class="canvas-part">
-      <!-- Progress Bar -->
-      <div class="progress-bar" id="progressBar"></div>
-      <!-- Canvas -->
-      <!-- <canvas id="canvas" class="active"></canvas> -->
-      <!-- <canvas id="capture-canvas" class="active"></canvas> -->
-
-      <!-- Capture Button with SVG -->
-      <div class="capture-btn" id="captureButton">
-        <svg id="progressRing" class="progress-ring" xmlns="http://www.w3.org/2000/svg">
-          <circle class="outer-circle" stroke="rgba(255, 255, 255,0.9)" stroke-width="3" fill="none" />
-          <circle class="progress-ring__circle" stroke="rgb(255, 0, 0)" stroke-width="3" fill="none" />
-          <circle class="inner-circle" fill="rgba(255, 255, 255,0.9)" />
+        <button class="button-1" role="button">Agree and Proceed</button>
+        <button class="button-1" role="button">Cancel</button>
+        <div id="intro-text-3" class="intro-text">
+          By continuing, you confirm you are at least 16 years old and accept our <u>Privacy Policy.</u><br><br>
+        </div>
+      </div>
+      <!-- HTML !-->
+    </div>
+    <div id="ui-capture">
+      <div id="btn-cross" class="btn-capture"><img src="assets/btn_cross.png" alt=""></div>
+      <div id="btn-back" class="btn-capture"><img src="assets/btn_back.png" alt=""></div>
+      <div id="flash-overlay"></div>
+      <div id="btn-download" class="btn-capture"><img src="assets/btn_download.png" alt=""></div>
+    </div>
+    <div id="ui-countdown" class="ui-countdowns">
+      <div id="countdown">
+        <span class="countdown-number"></span>
+        <svg class="countdown-circle" viewBox="0 0 40 40">
+          <circle class="static-circle" cx="20" cy="20" r="18" />
+          <circle cx="20" cy="20" r="18"></circle>
         </svg>
       </div>
-    </section>
-  </div>
 
-  <div class="poweredbysnap-logo">
-    <img id="image" src="./assets/Powered_bysnap.png" alt="Powered by Snap">
-  </div>
+    </div>
+    <div id="flash-overlay-container">
+      
+    </div>
 
+
+
+    <!-- Preview Section -->
+    <div id="container" class="container">
+      <section id="preview-part" class="preview-part">
+        <img src="assets/spin.gif" alt="loading" class="spin-loading" style="display: none" />
+        <div class="preview">
+          <!-- Video Progress Bar -->
+          <div class="progress-parent">
+            <div class="video-progress-bar-sudo">
+              <div class="video-progress-bar" id="videoProgressBar"></div>
+            </div>
+          </div>
+          <!-- Preview Image or Canvas -->
+          <img src="" alt="Preview Image" id="preview-img" class="preview-img" />
+          <canvas id="videoCanvas" class="video-canvas"></canvas>
+        </div>
+        <!-- Control Bar -->
+        <div class="controls">
+          <!-- Back Button -->
+          <img src="assets/back.png" alt="Back" class="back-btn" id="backButton" />
+          <!-- Action Button will be dynamically added here -->
+        </div>
+      </section>
+
+      <!-- Capture Section -->
+      <section id="canvas-part" class="canvas-part">
+        <!-- Progress Bar -->
+        <div class="progress-bar" id="progressBar"></div>
+        <!-- Canvas -->
+        <!-- <canvas id="canvas" class="active"></canvas> -->
+        <!-- <canvas id="capture-canvas" class="active"></canvas> -->
+
+        <!-- Capture Button with SVG -->
+        <div class="capture-btn" id="captureButton">
+          <svg id="progressRing" class="progress-ring" xmlns="http://www.w3.org/2000/svg">
+            <circle class="outer-circle" stroke="rgba(255, 255, 255,0.9)" stroke-width="3" fill="none" />
+            <circle class="progress-ring__circle" stroke="rgb(255, 255, 255)" stroke-width="3" fill="none" />
+            <circle class="inner-circle" fill="rgba(255, 255, 255,0.9)" />
+          </svg>
+        </div>
+      </section>
+    </div>
+
+    <div class="poweredbysnap-logo">
+      <img id="image" src="./assets/Powered_bysnap.png" alt="Powered by Snap">
+    </div>
+  </div>
   <!-- External Scripts -->
 
 
