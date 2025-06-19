@@ -82,7 +82,7 @@ function bindFlipCamera(session) {
 function isMobileDevice() {
     return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 }
-console.log('isMobile : '+isMobileDevice());
+console.log('isMobile : ' + isMobileDevice());
 
 async function updateCamera(session) {
 
@@ -96,8 +96,9 @@ async function updateCamera(session) {
     }
 
     if (isMobileDevice()) {
-        mediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: isBackFacing ? 'environment' : 'user', }, });
-    } else {
+        mediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: isBackFacing ? 'environment' : 'user', } });
+    }
+    if (!isMobileDevice()) {
         mediaStream = await navigator.mediaDevices.getUserMedia({
             video: {
                 width: { ideal: 4096 },
