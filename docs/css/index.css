@@ -147,10 +147,12 @@ body {
   align-items: center;
   justify-content: space-between;
   /* These two lines ensure the card never exceeds the viewport */
-  max-width: min(80vw, 720px);
+  /* max-width: min(80vw, 720px); */
+  max-width: min(100vw, 720px);
   max-height: 100vh;
   /* This ensures the card is as big as possible, but always fits */
-  width: min(80vw, 720px, calc(100vh * 9/16));
+  /* width: min(80vw, 720px, calc(100vh * 9/16)); */
+  width: min(100vw, 720px, calc(100vh * 9/16));
   /* This is the magic: limits width to not exceed what 9:16 allows for current viewport height */
 }
 

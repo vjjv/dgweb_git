@@ -116,7 +116,7 @@
     //   });
     // }
 
-    if (!isMobileDevice()) {
+    // if (!isMobileDevice()) {
       const targetWidth = 720;
       const targetHeight = Math.round(targetWidth * (16 / 9));; // For 16:9 landscape, this is backwards—see note below
 
@@ -134,7 +134,7 @@
         configurable: true,
         get: function () { return targetHeight; }
       });
-    }
+    // }
   </script>
 
   <script src="./lensID.js"></script>
