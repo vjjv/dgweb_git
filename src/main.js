@@ -82,6 +82,7 @@ function bindFlipCamera(session) {
 function isMobileDevice() {
     return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 }
+console.log('isMobile : '+isMobileDevice());
 
 async function updateCamera(session) {
 
@@ -94,7 +95,7 @@ async function updateCamera(session) {
         mediaStream.getVideoTracks()[0].stop();
     }
 
-    if (isMobileDevice) {
+    if (isMobileDevice()) {
         mediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: isBackFacing ? 'environment' : 'user', }, });
     } else {
         mediaStream = await navigator.mediaDevices.getUserMedia({
@@ -198,11 +199,45 @@ async function updateCamera(session) {
 
             // Set up download button
             document.getElementById('btn-download').addEventListener('click', function () {
-                const a = document.createElement('a');
-                a.href = dataURL;
-                a.download = 'Dolce&Gabbana-VTO.png';
-                a.click();
+                // Check if Web Share API is supported
+                if (isMobileDevice()) {
+
+                    if (navigator.share) {
+                        // Convert dataURL to a Blob
+                        fetch(dataURL)
+                            .then(res => res.blob())
+                            .then(blob => {
+                                const file = new File([blob], 'Dolce&Gabbana-VTO.png', { type: 'image/png' });
+                                navigator.share({
+                                    files: [file],
+                                    title: 'Dolce & Gabbana VTO',
+                                    text: 'Check out my Dolce & Gabbana virtual try-on!'
+                                }).catch(err => {
+                                    console.error('Error sharing:', err);
+                                    // Fallback to download
+                                    downloadImage(dataURL);
+                                });
+                            });
+                    } else {
+                        // Fallback to download
+                        const a = document.createElement('a');
+                        a.href = dataURL;
+                        a.download = 'Dolce&Gabbana-VTO.png';
+                        a.click();
+                    }
+                } else {
+                    const a = document.createElement('a');
+                    a.href = dataURL;
+                    a.download = 'Dolce&Gabbana-VTO.png';
+                    a.click();
+                }
             });
+            // document.getElementById('btn-download').addEventListener('click', function () {
+            //     const a = document.createElement('a');
+            //     a.href = dataURL;
+            //     a.download = 'Dolce&Gabbana-VTO.png';
+            //     a.click();
+            // });
 
             // Set up back button: revert to first state
             document.getElementById('btn-back').addEventListener('click', function () {
