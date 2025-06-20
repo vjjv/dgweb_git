@@ -59,12 +59,12 @@ body {
 }
 
 .poweredbysnap-logo {
-  width: 100%;
-  /* bottom: 0.5vh; */
-  display: flex;
-  align-items: center;
-  /* justify-content: center; */
-  z-index: 1;
+    width: 100%;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    z-index: 99999;
+    position: absolute;
 }
 
 .poweredbysnap-logo>img {

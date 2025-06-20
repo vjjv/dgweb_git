@@ -26,7 +26,7 @@ window.modePhoto = getURLorFallback('modePhoto', true);
 window.modeVideo = getURLorFallback('modeVideo', false);
 window.modeBothCamera = getURLorFallback('modeBothCamera', false);
 window.modeStartFaceCamera = getURLorFallback('modeStartFaceCamera', true);
-window.splashScreen = getURLorFallback('splashScreen', undefined); //change to undefined to skip intro or '0' for d&g project
+window.splashScreen = getURLorFallback('splashScreen', '0'); //change to undefined to skip intro or '0' for d&g project
 
 
 console.log('lensID : ' + window.lensID);
