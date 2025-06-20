@@ -59,12 +59,12 @@ body {
 }
 
 .poweredbysnap-logo {
-    width: 100%;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    z-index: 99999;
-    position: absolute;
+  width: 100%;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  z-index: 99999;
+  position: absolute;
 }
 
 .poweredbysnap-logo>img {
@@ -196,7 +196,7 @@ body {
   touch-action: manipulation;
   /* margin: 10px; */
   z-index: 22;
-  margin: 10px 50px;
+  margin: 0.5vh 1vh;
   height: 5vh;
   font-size: 2.5vh;
   width: 90%;
@@ -281,6 +281,7 @@ body {
 #intro-spacer {
   height: 15vh;
 }
+
 @media (max-width: 767px) {
   #intro-spacer {
     height: 5vh;
@@ -327,6 +328,7 @@ body {
   z-index: 100;
   /* Enlarge the whole countdown */
 }
+
 @media (max-width: 767px) {
   #countdown {
     transform: scale(3) translateY(-10%);
@@ -380,21 +382,21 @@ body {
 }
 
 #flash-overlay {
-    position: absolute;
-    top: 0;
-    /* left: 0; */
-    width: 10%;
-    height: 100vh;
-    height: 10dvh;
-    background: white;
-    opacity: 0;
-    pointer-events: none;
-    z-index: 9999;
-    animation: none;
-    pointer-events: none;
-    transform: scale(10);
-    transform-origin: top left;
-    display: none;
+  position: absolute;
+  top: 0;
+  /* left: 0; */
+  width: 10%;
+  height: 100vh;
+  height: 10dvh;
+  background: white;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 9999;
+  animation: none;
+  pointer-events: none;
+  transform: scale(10);
+  transform-origin: top left;
+  display: none;
 }
 
 @keyframes flash {
@@ -410,4 +412,9 @@ body {
   100% {
     opacity: 0;
   }
+}
+
+#intro-buttons {
+  width: 100%;
+  text-align: center;
 }
