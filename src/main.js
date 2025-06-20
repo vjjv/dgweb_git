@@ -95,23 +95,24 @@ async function updateCamera(session) {
         mediaStream.getVideoTracks()[0].stop();
     }
 
-    if (isMobileDevice()) {
-        mediaStream = await navigator.mediaDevices.getUserMedia({
-            video: true,
-            facingMode: isBackFacing ? 'environment' : 'user',
-        });
-    }
-    if (!isMobileDevice()) {
+    // if (isMobileDevice()) {
         mediaStream = await navigator.mediaDevices.getUserMedia({
             video: {
-                width: { ideal: 4096 },
-                height: { ideal: 2160 },
-                // width: { ideal: 1280 },
-                // height: { ideal: 720 },
                 facingMode: isBackFacing ? 'environment' : 'user',
-            },
+            }
         });
-    }
+    // }
+    // if (!isMobileDevice()) {
+    //     mediaStream = await navigator.mediaDevices.getUserMedia({
+    //         video: {
+    //             width: { ideal: 4096 },
+    //             height: { ideal: 2160 },
+    //             // width: { ideal: 1280 },
+    //             // height: { ideal: 720 },
+    //             facingMode: isBackFacing ? 'environment' : 'user',
+    //         },
+    //     });
+    // }
 
     const source = createMediaStreamSource(mediaStream, {
         // NOTE: This is important for world facing experiences
