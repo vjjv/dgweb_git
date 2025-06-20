@@ -135,8 +135,8 @@ async function updateCamera(session) {
     const resolutionMultiplier = window.devicePixelRatio;
     // const width = window.innerWidth * resolutionMultiplier;
     // const height = window.innerHeight * resolutionMultiplier;
-    const width = document.getElementById('container-9-16').clientWidth * resolutionMultiplier;
-    const height = document.getElementById('container-9-16').clientHeight * resolutionMultiplier;
+    const width = document.getElementById('container-9-16').clientWidth;// * resolutionMultiplier;
+    const height = document.getElementById('container-9-16').clientHeight;// * resolutionMultiplier;
     source.setRenderSize(width, height);
     console.log('Pixelate Debug')
     console.log('window.devicePixelRatio : ' + window.devicePixelRatio)
