@@ -24,17 +24,17 @@ if (window.splashScreen) {
             if (DeviceMotionEvent) if (typeof DeviceMotionEvent.requestPermission === 'function') DeviceMotionEvent.requestPermission();
             intro.style.display = 'none';
             canvas_part.style.display = 'flex';
-            // capture_button.style.display = 'flex';
             capture_button.style.opacity = 1;
             ui_capture.style.display = 'block';
-            
-
             init();
         }
     }, true);
 
 } else {
     intro.style.display = 'none';
+    canvas_part.style.display = 'flex';
+    capture_button.style.opacity = 1;
+    ui_capture.style.display = 'block';
     init();
 }
 
