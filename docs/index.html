@@ -39,35 +39,35 @@
       <div id="btn-back" class="btn-capture"><img src="assets/btn_back.png" alt=""></div>
       <div id="flash-overlay"></div>
       <div id="btn-download" class="btn-capture"><img src="assets/btn_download.png" alt=""></div>
-            <!-- Capture Section -->
-      <section id="canvas-part" class="canvas-part">
-        <!-- Progress Bar -->
-        <div class="progress-bar" id="progressBar"></div>
-        <!-- Canvas -->
-        <!-- <canvas id="canvas" class="active"></canvas> -->
-        <!-- <canvas id="capture-canvas" class="active"></canvas> -->
-
-        <!-- Capture Button with SVG -->
-        <div class="capture-btn" id="captureButton">
-          <svg id="progressRing" class="progress-ring" xmlns="http://www.w3.org/2000/svg">
-            <circle class="outer-circle" stroke="rgba(255, 255, 255,0.9)" stroke-width="3" fill="none" />
-            <circle class="progress-ring__circle" stroke="rgb(255, 255, 255)" stroke-width="3" fill="none" />
-            <circle class="inner-circle" fill="rgba(255, 255, 255,0.9)" />
+      <div id="ui-countdown" class="ui-countdowns">
+        <div id="countdown">
+          <span class="countdown-number"></span>
+          <svg class="countdown-circle" viewBox="0 0 40 40">
+            <circle class="static-circle" cx="20" cy="20" r="18" />
+            <circle cx="20" cy="20" r="18"></circle>
           </svg>
         </div>
-      </section>
-    </div>
-    <div id="ui-countdown" class="ui-countdowns">
-      <div id="countdown">
-        <span class="countdown-number"></span>
-        <svg class="countdown-circle" viewBox="0 0 40 40">
-          <circle class="static-circle" cx="20" cy="20" r="18" />
-          <circle cx="20" cy="20" r="18"></circle>
-        </svg>
       </div>
-
     </div>
 
+    <!-- Capture Section -->
+    <div id="canvas-part" class="canvas-part">
+      <!-- Progress Bar -->
+      <div class="progress-bar" id="progressBar"></div>
+      <!-- Canvas -->
+      <!-- <canvas id="canvas" class="active"></canvas> -->
+      <!-- <canvas id="capture-canvas" class="active"></canvas> -->
+
+      <!-- Capture Button with SVG -->
+    </div>
+
+    <div class="capture-btn" id="captureButton" style="display: none;">
+      <svg id="progressRing" class="progress-ring" xmlns="http://www.w3.org/2000/svg">
+        <circle class="outer-circle" stroke="rgba(255, 255, 255,0.9)" stroke-width="3" fill="none" />
+        <circle class="progress-ring__circle" stroke="rgb(255, 255, 255)" stroke-width="3" fill="none" />
+        <circle class="inner-circle" fill="rgba(255, 255, 255,0.9)" />
+      </svg>
+    </div>
 
     <!-- Preview Section -->
     <div id="container" class="container">
@@ -117,23 +117,23 @@
     // }
 
     // if (!isMobileDevice()) {
-      // const targetWidth = 720;
-      // const targetHeight = Math.round(targetWidth * (16 / 9));; // For 16:9 landscape, this is backwards—see note below
+    // const targetWidth = 720;
+    // const targetHeight = Math.round(targetWidth * (16 / 9));; // For 16:9 landscape, this is backwards—see note below
 
-      // Clarification: For 16:9 LANDSCAPE, you want width: 16, height: 9, so:
-      // const targetHeight = Math.round(targetWidth * (9 / 16));
-      // For 9:16 PORTRAIT, you want width: 9, height: 16, so:
-      // const targetHeight = Math.round(targetWidth * (16 / 9));
+    // Clarification: For 16:9 LANDSCAPE, you want width: 16, height: 9, so:
+    // const targetHeight = Math.round(targetWidth * (9 / 16));
+    // For 9:16 PORTRAIT, you want width: 9, height: 16, so:
+    // const targetHeight = Math.round(targetWidth * (16 / 9));
 
-      // Enforce the ratio by overriding both properties
-      // Object.defineProperty(window, 'innerWidth', {
-      //   configurable: true,
-      //   get: function () { return targetWidth; }
-      // });
-      // Object.defineProperty(window, 'innerHeight', {
-      //   configurable: true,
-      //   get: function () { return targetHeight; }
-      // });
+    // Enforce the ratio by overriding both properties
+    // Object.defineProperty(window, 'innerWidth', {
+    //   configurable: true,
+    //   get: function () { return targetWidth; }
+    // });
+    // Object.defineProperty(window, 'innerHeight', {
+    //   configurable: true,
+    //   get: function () { return targetHeight; }
+    // });
     // }
   </script>
 

@@ -30488,6 +30488,9 @@ const liveRenderTarget = document.getElementById('canvas');
 const captureRenderTarget = document.getElementById('capture-canvas');
 const flipCamera = document.getElementById('flip');
 const intro = document.getElementById('intro-bg');
+const canvas_part = document.getElementById('canvas-part');
+const capture_button = document.getElementById('captureButton');
+const ui_capture = document.getElementById('ui-capture');
 var firstTime = true;
 console.log('splashScren : ' + window.splashScreen);
 if (window.splashScreen) {
@@ -30496,6 +30499,12 @@ if (window.splashScreen) {
             firstTime = false;
             if (DeviceMotionEvent) if (typeof DeviceMotionEvent.requestPermission === 'function') DeviceMotionEvent.requestPermission();
             intro.style.display = 'none';
+            canvas_part.style.display = 'flex';
+            // capture_button.style.display = 'flex';
+            capture_button.style.opacity = 1;
+            ui_capture.style.display = 'block';
+            
+
             init();
         }
     }, true);
@@ -30571,24 +30580,24 @@ async function updateCamera(session) {
         mediaStream.getVideoTracks()[0].stop();
     }
 
-    // if (isMobileDevice()) {
+    if (isMobileDevice()) {
         mediaStream = await navigator.mediaDevices.getUserMedia({
             video: {
                 facingMode: isBackFacing ? 'environment' : 'user',
             }
         });
-    // }
-    // if (!isMobileDevice()) {
-    //     mediaStream = await navigator.mediaDevices.getUserMedia({
-    //         video: {
-    //             width: { ideal: 4096 },
-    //             height: { ideal: 2160 },
-    //             // width: { ideal: 1280 },
-    //             // height: { ideal: 720 },
-    //             facingMode: isBackFacing ? 'environment' : 'user',
-    //         },
-    //     });
-    // }
+    }
+    if (!isMobileDevice()) {
+        mediaStream = await navigator.mediaDevices.getUserMedia({
+            video: {
+                width: { ideal: 4096 },
+                height: { ideal: 2160 },
+                // width: { ideal: 1280 },
+                // height: { ideal: 720 },
+                facingMode: isBackFacing ? 'environment' : 'user',
+            },
+        });
+    }
 
     const source = createMediaStreamSource(mediaStream, {
         // NOTE: This is important for world facing experiences
@@ -30627,6 +30636,7 @@ async function updateCamera(session) {
     document.getElementById('captureButton').addEventListener('click', function () {
         session.play('capture');
         session.pause('live');
+        document.getElementById('flash-overlay').style.display = 'block';
         setTimeout(e => {
             document.getElementById('canvas').style.display = 'block';
             document.getElementById('live-canvas').style.display = 'none';
