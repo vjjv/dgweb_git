@@ -96,7 +96,10 @@ async function updateCamera(session) {
     }
 
     if (isMobileDevice()) {
-        mediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: isBackFacing ? 'environment' : 'user', } });
+        mediaStream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+            facingMode: isBackFacing ? 'environment' : 'user',
+        });
     }
     if (!isMobileDevice()) {
         mediaStream = await navigator.mediaDevices.getUserMedia({
