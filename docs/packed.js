@@ -30491,12 +30491,12 @@ const intro = document.getElementById('intro-bg');
 const canvas_part = document.getElementById('canvas-part');
 const capture_button = document.getElementById('captureButton');
 const ui_capture = document.getElementById('ui-capture');
-const btn_accept = document.getElementById('btn-accept');
+const btn_agree = document.getElementById('btn-agree');
 const btn_cancel = document.getElementById('btn-cancel');
 var firstTime = true;
 console.log('splashScren : ' + window.splashScreen);
 if (window.splashScreen) {
-    btn_accept.addEventListener('click', () => {
+    btn_agree.addEventListener('click', () => {
         if (firstTime) {
             firstTime = false;
             // if (DeviceMotionEvent) if (typeof DeviceMotionEvent.requestPermission === 'function') DeviceMotionEvent.requestPermission();
