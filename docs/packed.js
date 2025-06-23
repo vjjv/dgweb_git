@@ -30553,7 +30553,7 @@ async function init() {
 
     bindFlipCamera(session);
 
-   
+
 }
 
 function bindFlipCamera(session) {
@@ -30580,7 +30580,6 @@ async function updateCamera(session) {
 
     if (mediaStream) {
         session.pause();
-        // mediaStream.getVideoTracks()[0].stop();
         mediaStream.getVideoTracks().forEach(track => track.stop());
     }
 
@@ -30591,41 +30590,52 @@ async function updateCamera(session) {
             }
         });
     }
+
     if (!isMobileDevice()) {
         const isIPad = (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-        //iPad
         if (isIPad) {
             console.log('IPAD DETECTION');
-            // getMediaStreamiPad(isBackFacing);
-        }
-        //Desktop
-        // } else {
-        mediaStream = await navigator.mediaDevices.getUserMedia({
-            video: {
-                width: { ideal: 4096 },
-                height: { ideal: 2160 },
-                // width: { ideal: 2560 },
-                // height: { ideal: 1440 },
-                // width: { ideal: 1280 },
-                // height: { ideal: 720 },
-                facingMode: isBackFacing ? 'environment' : 'user',
-            },
-        });
 
-         //////////////////// LOG LIST CAMERA
-    console.log('LIST CAMERAS'); logVideoDevices();
-    async function logVideoDevices() {
-        const devices = await getVideoInputDevices();
-        devices.forEach(device => {
-            console.log(`Device ID: ${device.deviceId}, Label: ${device.label}`);
-        });
+            // Step 1: Request permission with minimal constraints to get labels
+            await navigator.mediaDevices.getUserMedia({ video: true });
+
+            // Step 2: Enumerate devices with labels now available
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            const videoDevices = devices.filter(d => d.kind === 'videoinput');
+
+            // Step 3: Filter devices by facing mode and exclude "wide"
+            const filtered = videoDevices.filter(device => {
+                const label = device.label.toLowerCase();
+                const isFront = label.includes('front');
+                const isBack = label.includes('back') || label.includes('environment');
+                const facingMatch = isBackFacing ? isBack : isFront;
+                return facingMatch && !label.includes('wide');
+            });
+
+            // Step 4: Use filtered deviceId or fallback
+            const deviceId = filtered.length > 0 ? filtered[0].deviceId : null;
+
+            mediaStream = await navigator.mediaDevices.getUserMedia({
+                video: deviceId ? { deviceId: { exact: deviceId } } : { facingMode: isBackFacing ? 'environment' : 'user' }
+            });
+        } else {
+            mediaStream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    width: { ideal: 4096 },
+                    height: { ideal: 2160 },
+                    facingMode: isBackFacing ? 'environment' : 'user',
+                },
+            });
+        }
+
+        // Log cameras
+        console.log('LIST CAMERAS');
+        (await navigator.mediaDevices.enumerateDevices())
+            .filter(d => d.kind === 'videoinput')
+            .forEach(device => console.log(`Device ID: ${device.deviceId}, Label: ${device.label}`));
     }
-    async function getVideoInputDevices() {
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        return devices.filter(device => device.kind === 'videoinput');
-    }
-    ////////////////////////
-    }
+
+    // }
 
 
 
