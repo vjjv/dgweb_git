@@ -96,266 +96,359 @@ function isMobileDevice() {
 console.log('isMobile : ' + isMobileDevice());
 
 
+// async function updateCamera(session) {
+
+//     // flipCamera.innerText = isBackFacing
+//     // ? 'Switch to Front Camera'
+//     // : 'Switch to Back Camera';
+
+//     if (mediaStream) {
+//         session.pause();
+//         // mediaStream.getVideoTracks()[0].stop();
+//         mediaStream.getVideoTracks().forEach(track => track.stop());
+//     }
+
+//     if (isMobileDevice()) {
+//         mediaStream = await navigator.mediaDevices.getUserMedia({
+//             video: {
+//                 facingMode: isBackFacing ? 'environment' : 'user',
+//             }
+//         });
+//     }
+//     if (!isMobileDevice()) {
+//         const isIPad = (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+//         //iPad
+//         if (isIPad) {
+//             console.log('IPAD DETECTION');
+//             // getMediaStreamiPad(isBackFacing);
+//         }
+//         //Desktop
+//         // } else {
+//         mediaStream = await navigator.mediaDevices.getUserMedia({
+//             video: {
+//                 width: { ideal: 4096 },
+//                 height: { ideal: 2160 },
+//                 // width: { ideal: 2560 },
+//                 // height: { ideal: 1440 },
+//                 // width: { ideal: 1280 },
+//                 // height: { ideal: 720 },
+//                 facingMode: isBackFacing ? 'environment' : 'user',
+//             },
+//         });
+
+//         //////////////////// LOG LIST CAMERA
+//         console.log('LIST CAMERAS'); logVideoDevices();
+//         async function logVideoDevices() {
+//             const devices = await getVideoInputDevices();
+//             devices.forEach(device => {
+//                 console.log(`Device ID: ${device.deviceId}, Label: ${device.label}`);
+//             });
+//         }
+//         async function getVideoInputDevices() {
+//             const devices = await navigator.mediaDevices.enumerateDevices();
+//             return devices.filter(device => device.kind === 'videoinput');
+//         }
+//         ////////////////////////
+//     }
+
 async function updateCamera(session) {
-
-    // flipCamera.innerText = isBackFacing
-    // ? 'Switch to Front Camera'
-    // : 'Switch to Back Camera';
-
+    // Stop existing media stream tracks if any
     if (mediaStream) {
         session.pause();
-        // mediaStream.getVideoTracks()[0].stop();
         mediaStream.getVideoTracks().forEach(track => track.stop());
     }
 
-    if (isMobileDevice()) {
+    const mobile = isMobileDevice();
+
+    if (mobile) {
+        // Mobile devices: simple facingMode constraint
         mediaStream = await navigator.mediaDevices.getUserMedia({
             video: {
                 facingMode: isBackFacing ? 'environment' : 'user',
             }
         });
-    }
-    if (!isMobileDevice()) {
+    } else {
+        // Non-mobile devices: detect iPad (desktop UA + touch)
         const isIPad = (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-        //iPad
+
         if (isIPad) {
             console.log('IPAD DETECTION');
-            // getMediaStreamiPad(isBackFacing);
-        }
-        //Desktop
-        // } else {
-        mediaStream = await navigator.mediaDevices.getUserMedia({
-            video: {
-                width: { ideal: 4096 },
-                height: { ideal: 2160 },
-                // width: { ideal: 2560 },
-                // height: { ideal: 1440 },
-                // width: { ideal: 1280 },
-                // height: { ideal: 720 },
-                facingMode: isBackFacing ? 'environment' : 'user',
-            },
-        });
 
-        //////////////////// LOG LIST CAMERA
-        console.log('LIST CAMERAS'); logVideoDevices();
-        async function logVideoDevices() {
-            const devices = await getVideoInputDevices();
-            devices.forEach(device => {
-                console.log(`Device ID: ${device.deviceId}, Label: ${device.label}`);
+            // Get deviceId for camera excluding "wide" lenses
+            const deviceId = await getFilteredCameraDeviceId(isBackFacing);
+
+            if (deviceId) {
+                mediaStream = await navigator.mediaDevices.getUserMedia({
+                    video: { deviceId: { exact: deviceId } }
+                });
+            } else {
+                // Fallback to facingMode if no suitable device found
+                mediaStream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: isBackFacing ? 'environment' : 'user' }
+                });
+            }
+        } else {
+            // Desktop or other non-mobile devices: high resolution + facingMode
+            mediaStream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    width: { ideal: 4096 },
+                    height: { ideal: 2160 },
+                    facingMode: isBackFacing ? 'environment' : 'user',
+                }
             });
         }
-        async function getVideoInputDevices() {
-            const devices = await navigator.mediaDevices.enumerateDevices();
-            return devices.filter(device => device.kind === 'videoinput');
-        }
-        ////////////////////////
+
+        // Log all video input devices for debugging
+        console.log('LIST CAMERAS');
+        await logVideoDevices();
     }
 
+    // Helper: enumerate and log video input devices
+    async function logVideoDevices() {
+        const devices = await getVideoInputDevices();
+        devices.forEach(device => {
+            console.log(`Device ID: ${device.deviceId}, Label: ${device.label}`);
+        });
+    }
 
+    // Helper: get all video input devices
+    async function getVideoInputDevices() {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        return devices.filter(device => device.kind === 'videoinput');
+    }
 
-    async function getMediaStreamiPad(isBackFacing) {
-        let videoConstraints = {};
+    // Helper: get camera deviceId excluding "wide" lenses, matching facing mode
+    async function getFilteredCameraDeviceId(isBackFacing) {
+        // Request permission to get device labels
+        await navigator.mediaDevices.getUserMedia({ video: true });
 
-        if (isBackFacing) {
-            videoConstraints = { facingMode: 'environment' };
+        const devices = await getVideoInputDevices();
+
+        const filteredDevices = devices.filter(device => {
+            const label = device.label.toLowerCase();
+            const isFront = label.includes('front');
+            const isBack = label.includes('back') || label.includes('environment');
+
+            const facingMatch = isBackFacing ? isBack : isFront;
+            const excludeWide = label.includes('wide');
+
+            return facingMatch && !excludeWide;
+        });
+
+        if (filteredDevices.length > 0) {
+            console.log('Filtered cameras:', filteredDevices);
+            return filteredDevices[0].deviceId;
         } else {
-            // For front camera, select deviceId explicitly to avoid ultra-wide
-            const devices = await getVideoInputDevices();
-            // Example: pick the first front camera that is NOT ultra-wide
-            const frontCameras = devices.filter(device => device.label.toLowerCase().includes('face') || device.label.toLowerCase().includes('front'));
-            let selectedCamera = frontCameras[0]; // fallback
+            console.warn('No camera found excluding "wide" lenses, fallback to default');
+            return null;
+        }
+    }
+}
 
-            for (const device of frontCameras) {
-                if (!device.label.toLowerCase().includes('ultra')) {
-                    selectedCamera = device;
-                    break;
-                }
+
+async function getMediaStreamiPad(isBackFacing) {
+    let videoConstraints = {};
+
+    if (isBackFacing) {
+        videoConstraints = { facingMode: 'environment' };
+    } else {
+        // For front camera, select deviceId explicitly to avoid ultra-wide
+        const devices = await getVideoInputDevices();
+        // Example: pick the first front camera that is NOT ultra-wide
+        const frontCameras = devices.filter(device => device.label.toLowerCase().includes('face') || device.label.toLowerCase().includes('front'));
+        let selectedCamera = frontCameras[0]; // fallback
+
+        for (const device of frontCameras) {
+            if (!device.label.toLowerCase().includes('ultra')) {
+                selectedCamera = device;
+                break;
             }
-
-            videoConstraints = { deviceId: { exact: selectedCamera.deviceId } };
         }
 
-        return await navigator.mediaDevices.getUserMedia({ video: videoConstraints });
+        videoConstraints = { deviceId: { exact: selectedCamera.deviceId } };
     }
 
-
-    const source = createMediaStreamSource(mediaStream, {
-        // NOTE: This is important for world facing experiences
-        cameraType: isBackFacing ? 'back' : 'front',
-    });
-
-    await session.setSource(source);
+    return await navigator.mediaDevices.getUserMedia({ video: videoConstraints });
+}
 
 
-    //DEBUG PIXELATE
-    const resolutionMultiplier = window.devicePixelRatio;
-    // const width = window.innerWidth * resolutionMultiplier;
-    // const height = window.innerHeight * resolutionMultiplier;
-    let multiplier = (resolutionMultiplier > 1) ? 2 : 1;
-    const width = document.getElementById('container-9-16').clientWidth * multiplier;
-    const height = document.getElementById('container-9-16').clientHeight * multiplier;
-    source.setRenderSize(width, height);
-    console.log('Pixelate Debug')
-    console.log('window.devicePixelRatio : ' + window.devicePixelRatio)
-    console.log('window.innerWidth : ' + window.innerWidth)
-    console.log('window.innerHeight : ' + window.innerHeight)
-    console.log('source.setRenderSize(width, height) : ' + window.innerWidth * resolutionMultiplier + ', ' + window.innerHeight * resolutionMultiplier)
-    //END DEBUG
+const source = createMediaStreamSource(mediaStream, {
+    // NOTE: This is important for world facing experiences
+    cameraType: isBackFacing ? 'back' : 'front',
+});
 
-    if (!isBackFacing) {
-        source.setTransform(Transform2D.MirrorX);
-    }
-
-    isBackFacing = !isBackFacing;
+await session.setSource(source);
 
 
+//DEBUG PIXELATE
+const resolutionMultiplier = window.devicePixelRatio;
+// const width = window.innerWidth * resolutionMultiplier;
+// const height = window.innerHeight * resolutionMultiplier;
+let multiplier = (resolutionMultiplier > 1) ? 2 : 1;
+const width = document.getElementById('container-9-16').clientWidth * multiplier;
+const height = document.getElementById('container-9-16').clientHeight * multiplier;
+source.setRenderSize(width, height);
+console.log('Pixelate Debug')
+console.log('window.devicePixelRatio : ' + window.devicePixelRatio)
+console.log('window.innerWidth : ' + window.innerWidth)
+console.log('window.innerHeight : ' + window.innerHeight)
+console.log('source.setRenderSize(width, height) : ' + window.innerWidth * resolutionMultiplier + ', ' + window.innerHeight * resolutionMultiplier)
+//END DEBUG
+
+if (!isBackFacing) {
+    source.setTransform(Transform2D.MirrorX);
+}
+
+isBackFacing = !isBackFacing;
 
 
-    session.play('live'); // Start live output on "live-canvas"
-    session.pause('capture'); // Pause capture output on "canvas"
-
-    document.getElementById('captureButton').addEventListener('click', function () {
-        session.play('capture');
-        session.pause('live');
-        document.getElementById('flash-overlay').style.display = 'block';
-        setTimeout(e => {
-            document.getElementById('canvas').style.display = 'block';
-            document.getElementById('live-canvas').style.display = 'none';
-            this.style.display = 'none';
-        }, 100)
-
-        const countdownEl = document.getElementById('countdown');
-        const countdownNumber = document.querySelector('.countdown-number');
-        const circle = document.querySelector('.countdown-circle circle');
-        countdownEl.style.display = 'block';
-        countdownNumber.textContent = '3';
-
-        // Start circle animation
-        circle.style.animation = 'none';
-        void circle.offsetWidth; // Force reflow
-        circle.style.animation = 'countdown 3s linear forwards';
-
-        let count = 3;
-        const intervalId = setInterval(function () {
-            count--;
-            countdownNumber.textContent = count;
-            if (count <= 0) {
-                clearInterval(intervalId);
-                countdownEl.style.display = 'none';
 
 
-                triggerFlash();
+session.play('live'); // Start live output on "live-canvas"
+session.pause('capture'); // Pause capture output on "canvas"
 
-                replaceCanvasWithScreenshot();
-            }
-        }, 1000);
+document.getElementById('captureButton').addEventListener('click', function () {
+    session.play('capture');
+    session.pause('live');
+    document.getElementById('flash-overlay').style.display = 'block';
+    setTimeout(e => {
+        document.getElementById('canvas').style.display = 'block';
+        document.getElementById('live-canvas').style.display = 'none';
+        this.style.display = 'none';
+    }, 100)
+
+    const countdownEl = document.getElementById('countdown');
+    const countdownNumber = document.querySelector('.countdown-number');
+    const circle = document.querySelector('.countdown-circle circle');
+    countdownEl.style.display = 'block';
+    countdownNumber.textContent = '3';
+
+    // Start circle animation
+    circle.style.animation = 'none';
+    void circle.offsetWidth; // Force reflow
+    circle.style.animation = 'countdown 3s linear forwards';
+
+    let count = 3;
+    const intervalId = setInterval(function () {
+        count--;
+        countdownNumber.textContent = count;
+        if (count <= 0) {
+            clearInterval(intervalId);
+            countdownEl.style.display = 'none';
 
 
-        function replaceCanvasWithScreenshot() {
-            // Get data URL from canvas
-            const canvas = document.getElementById('canvas');
-            const dataURL = canvas.toDataURL('image/png');
-            // Create image element
-            const img = document.createElement('img');
-            img.src = dataURL;
-            img.style.height = '100%';
-            // img.style.maxHeight = '100%';
-            // img.style.maxWidth = '100%';
-            // Replace canvas with image
-            canvas.parentElement.insertBefore(img, canvas);
-            canvas.style.display = 'none';
+            triggerFlash();
 
-            // Show action buttons
-            document.getElementById('btn-back').style.display = 'block';
-            document.getElementById('btn-download').style.display = 'block';
+            replaceCanvasWithScreenshot();
+        }
+    }, 1000);
 
-            // Set up download button
-            document.getElementById('btn-download').addEventListener('click', function () {
-                // Check if Web Share API is supported
-                if (isMobileDevice()) {
 
-                    if (navigator.share) {
-                        // Convert dataURL to a Blob
-                        fetch(dataURL)
-                            .then(res => res.blob())
-                            .then(blob => {
-                                const file = new File([blob], 'Dolce&Gabbana-VTO.png', { type: 'image/png' });
-                                navigator.share({
-                                    files: [file],
-                                    title: 'Dolce & Gabbana VTO',
-                                    text: 'Check out my Dolce & Gabbana virtual try-on!'
-                                }).catch(err => {
-                                    console.error('Error sharing:', err);
-                                    // Fallback to download
-                                    downloadImage(dataURL);
-                                });
+    function replaceCanvasWithScreenshot() {
+        // Get data URL from canvas
+        const canvas = document.getElementById('canvas');
+        const dataURL = canvas.toDataURL('image/png');
+        // Create image element
+        const img = document.createElement('img');
+        img.src = dataURL;
+        img.style.height = '100%';
+        // img.style.maxHeight = '100%';
+        // img.style.maxWidth = '100%';
+        // Replace canvas with image
+        canvas.parentElement.insertBefore(img, canvas);
+        canvas.style.display = 'none';
+
+        // Show action buttons
+        document.getElementById('btn-back').style.display = 'block';
+        document.getElementById('btn-download').style.display = 'block';
+
+        // Set up download button
+        document.getElementById('btn-download').addEventListener('click', function () {
+            // Check if Web Share API is supported
+            if (isMobileDevice()) {
+
+                if (navigator.share) {
+                    // Convert dataURL to a Blob
+                    fetch(dataURL)
+                        .then(res => res.blob())
+                        .then(blob => {
+                            const file = new File([blob], 'Dolce&Gabbana-VTO.png', { type: 'image/png' });
+                            navigator.share({
+                                files: [file],
+                                title: 'Dolce & Gabbana VTO',
+                                text: 'Check out my Dolce & Gabbana virtual try-on!'
+                            }).catch(err => {
+                                console.error('Error sharing:', err);
+                                // Fallback to download
+                                downloadImage(dataURL);
                             });
-                    } else {
-                        // Fallback to download
-                        const a = document.createElement('a');
-                        a.href = dataURL;
-                        a.download = 'Dolce&Gabbana-VTO.png';
-                        a.click();
-                    }
+                        });
                 } else {
+                    // Fallback to download
                     const a = document.createElement('a');
                     a.href = dataURL;
                     a.download = 'Dolce&Gabbana-VTO.png';
                     a.click();
                 }
-            });
-            // document.getElementById('btn-download').addEventListener('click', function () {
-            //     const a = document.createElement('a');
-            //     a.href = dataURL;
-            //     a.download = 'Dolce&Gabbana-VTO.png';
-            //     a.click();
-            // });
+            } else {
+                const a = document.createElement('a');
+                a.href = dataURL;
+                a.download = 'Dolce&Gabbana-VTO.png';
+                a.click();
+            }
+        });
+        // document.getElementById('btn-download').addEventListener('click', function () {
+        //     const a = document.createElement('a');
+        //     a.href = dataURL;
+        //     a.download = 'Dolce&Gabbana-VTO.png';
+        //     a.click();
+        // });
 
-            // Set up back button: revert to first state
-            document.getElementById('btn-back').addEventListener('click', function () {
-                // Remove the screenshot image if present
-                if (img.parentElement) img.parentElement.removeChild(img);
-                // Show live canvas, hide capture canvas
-                document.getElementById('live-canvas').style.display = 'block';
-                document.getElementById('canvas').style.display = 'none';
-                // Show capture button, hide action buttons
-                document.getElementById('captureButton').style.display = 'block';
-                document.getElementById('btn-back').style.display = 'none';
-                document.getElementById('btn-download').style.display = 'none';
-                // Resume live output, pause capture output
-                session.play('live');
-                session.pause('capture');
-            });
-        }
-    });
-
-    function triggerFlash() {
-        const flash = document.getElementById('flash-overlay');
-        // Reset to 0 opacity and clear any animation/transition
-        flash.style.opacity = '0';
-        flash.style.transition = 'none';
-
-        // Force reflow
-        void flash.offsetWidth;
-
-        // First: fade in (0 to 1 in 0.3s linear)
-        flash.style.transition = 'opacity 0.3s linear';
-        flash.style.opacity = '1';
-
-        // After 0.3s, start fade out (1 to 0 in 3s ease-out)
-        setTimeout(() => {
-            flash.style.transition = 'opacity 3s ease-out';
-            flash.style.opacity = '0';
-            // Optional: reset transition after animation
-            setTimeout(() => {
-                flash.style.transition = 'none';
-            }, 3000);
-        }, 300);
+        // Set up back button: revert to first state
+        document.getElementById('btn-back').addEventListener('click', function () {
+            // Remove the screenshot image if present
+            if (img.parentElement) img.parentElement.removeChild(img);
+            // Show live canvas, hide capture canvas
+            document.getElementById('live-canvas').style.display = 'block';
+            document.getElementById('canvas').style.display = 'none';
+            // Show capture button, hide action buttons
+            document.getElementById('captureButton').style.display = 'block';
+            document.getElementById('btn-back').style.display = 'none';
+            document.getElementById('btn-download').style.display = 'none';
+            // Resume live output, pause capture output
+            session.play('live');
+            session.pause('capture');
+        });
     }
+});
 
+function triggerFlash() {
+    const flash = document.getElementById('flash-overlay');
+    // Reset to 0 opacity and clear any animation/transition
+    flash.style.opacity = '0';
+    flash.style.transition = 'none';
 
+    // Force reflow
+    void flash.offsetWidth;
 
+    // First: fade in (0 to 1 in 0.3s linear)
+    flash.style.transition = 'opacity 0.3s linear';
+    flash.style.opacity = '1';
 
+    // After 0.3s, start fade out (1 to 0 in 3s ease-out)
+    setTimeout(() => {
+        flash.style.transition = 'opacity 3s ease-out';
+        flash.style.opacity = '0';
+        // Optional: reset transition after animation
+        setTimeout(() => {
+            flash.style.transition = 'none';
+        }, 3000);
+    }, 300);
 }
+
+
+
+
+// }
 
 // init();
