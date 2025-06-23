@@ -75,21 +75,9 @@ async function init() {
     );
     await session.applyLens(lens);
 
-
-    //////////////////// LOG LIST CAMERA
     bindFlipCamera(session);
-    console.log('LIST CAMERAS'); logVideoDevices();
-    async function logVideoDevices() {
-        const devices = await getVideoInputDevices();
-        devices.forEach(device => {
-            console.log(`Device ID: ${device.deviceId}, Label: ${device.label}`);
-        });
-    }
-    async function getVideoInputDevices() {
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        return devices.filter(device => device.kind === 'videoinput');
-    }
-    ////////////////////////
+
+
 }
 
 function bindFlipCamera(session) {
@@ -116,7 +104,8 @@ async function updateCamera(session) {
 
     if (mediaStream) {
         session.pause();
-        mediaStream.getVideoTracks()[0].stop();
+        // mediaStream.getVideoTracks()[0].stop();
+        mediaStream.getVideoTracks().forEach(track => track.stop());
     }
 
     if (isMobileDevice()) {
@@ -146,7 +135,20 @@ async function updateCamera(session) {
                 facingMode: isBackFacing ? 'environment' : 'user',
             },
         });
-        // }
+
+        //////////////////// LOG LIST CAMERA
+        console.log('LIST CAMERAS'); logVideoDevices();
+        async function logVideoDevices() {
+            const devices = await getVideoInputDevices();
+            devices.forEach(device => {
+                console.log(`Device ID: ${device.deviceId}, Label: ${device.label}`);
+            });
+        }
+        async function getVideoInputDevices() {
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            return devices.filter(device => device.kind === 'videoinput');
+        }
+        ////////////////////////
     }
 
 
