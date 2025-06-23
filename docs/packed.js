@@ -30569,7 +30569,11 @@ function bindFlipCamera(session) {
 function isMobileDevice() {
     return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 }
+function isIPad() {
+    return (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+}
 console.log('isMobile : ' + isMobileDevice());
+console.log('isIPad : ' + isIPad());
 
 
 async function updateCamera(session) {
@@ -30592,8 +30596,7 @@ async function updateCamera(session) {
     }
 
     if (!isMobileDevice()) {
-        const isIPad = (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-        if (isIPad) {
+        if (isIPad()) {
             console.log('IPAD DETECTION');
 
             // Step 1: Request permission with minimal constraints to get labels
@@ -30758,7 +30761,7 @@ async function updateCamera(session) {
             // Set up download button
             document.getElementById('btn-download').addEventListener('click', function () {
                 // Check if Web Share API is supported
-                if (isMobileDevice()) {
+                if (isMobileDevice() || isIPad()) {
 
                     if (navigator.share) {
                         // Convert dataURL to a Blob
