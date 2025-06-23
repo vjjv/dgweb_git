@@ -30491,10 +30491,12 @@ const intro = document.getElementById('intro-bg');
 const canvas_part = document.getElementById('canvas-part');
 const capture_button = document.getElementById('captureButton');
 const ui_capture = document.getElementById('ui-capture');
+const btn_accept = document.getElementById('btn-accept');
+const btn_cancel = document.getElementById('btn-cancel');
 var firstTime = true;
 console.log('splashScren : ' + window.splashScreen);
 if (window.splashScreen) {
-    document.body.addEventListener('click', () => {
+    btn_accept.addEventListener('click', () => {
         if (firstTime) {
             firstTime = false;
             // if (DeviceMotionEvent) if (typeof DeviceMotionEvent.requestPermission === 'function') DeviceMotionEvent.requestPermission();
@@ -30502,9 +30504,15 @@ if (window.splashScreen) {
             canvas_part.style.display = 'flex';
             capture_button.style.opacity = 1;
             ui_capture.style.display = 'block';
+            console.log('postMessage : startLoading');
+            window.parent?.postMessage({ action: 'startLoading' });
             init();
         }
     }, true);
+    btn_cancel.addEventListener('click', ()=>{
+        console.log('postMessage : close');
+        window.parent?.postMessage({ action: 'close' });
+    })
 
 } else {
     intro.style.display = 'none';
@@ -30674,6 +30682,9 @@ async function updateCamera(session) {
     });
 
     await session.setSource(source);
+    
+    console.log('postMessage : endLoading');
+    window.parent?.postMessage({ action: 'endLoading' });
 
 
     //DEBUG PIXELATE
