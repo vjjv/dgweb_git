@@ -116,21 +116,22 @@ async function updateCamera(session) {
         //iPad
         if (isIPad) {
             console.log('IPAD DETECTION');
-            getMediaStreamiPad(isBackFacing);
-        //Desktop
-        } else {
-            mediaStream = await navigator.mediaDevices.getUserMedia({
-                video: {
-                    width: { ideal: 4096 },
-                    height: { ideal: 2160 },
-                    // width: { ideal: 2560 },
-                    // height: { ideal: 1440 },
-                    // width: { ideal: 1280 },
-                    // height: { ideal: 720 },
-                    facingMode: isBackFacing ? 'environment' : 'user',
-                },
-            });
+            // getMediaStreamiPad(isBackFacing);
         }
+        //Desktop
+        // } else {
+        mediaStream = await navigator.mediaDevices.getUserMedia({
+            video: {
+                width: { ideal: 4096 },
+                height: { ideal: 2160 },
+                // width: { ideal: 2560 },
+                // height: { ideal: 1440 },
+                // width: { ideal: 1280 },
+                // height: { ideal: 720 },
+                facingMode: isBackFacing ? 'environment' : 'user',
+            },
+        });
+        // }
     }
 
     async function getVideoInputDevices() {
