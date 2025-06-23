@@ -112,18 +112,56 @@ async function updateCamera(session) {
         });
     }
     if (!isMobileDevice()) {
-        mediaStream = await navigator.mediaDevices.getUserMedia({
-            video: {
-                // width: { ideal: 4096 },
-                // height: { ideal: 2160 },
-                // width: { ideal: 2560 },
-                // height: { ideal: 1440 },
-                // width: { ideal: 1280 },
-                // height: { ideal: 720 },
-                facingMode: isBackFacing ? 'environment' : 'user',
-            },
-        });
+        const isIPad = (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        //iPad
+        if (isIPad) {
+            console.log('IPAD DETECTION');
+            getMediaStreamiPad(isBackFacing);
+        //Desktop
+        } else {
+            mediaStream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    width: { ideal: 4096 },
+                    height: { ideal: 2160 },
+                    // width: { ideal: 2560 },
+                    // height: { ideal: 1440 },
+                    // width: { ideal: 1280 },
+                    // height: { ideal: 720 },
+                    facingMode: isBackFacing ? 'environment' : 'user',
+                },
+            });
+        }
     }
+
+    async function getVideoInputDevices() {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        return devices.filter(device => device.kind === 'videoinput');
+    }
+    async function getMediaStreamiPad(isBackFacing) {
+        let videoConstraints = {};
+
+        if (isBackFacing) {
+            videoConstraints = { facingMode: 'environment' };
+        } else {
+            // For front camera, select deviceId explicitly to avoid ultra-wide
+            const devices = await getVideoInputDevices();
+            // Example: pick the first front camera that is NOT ultra-wide
+            const frontCameras = devices.filter(device => device.label.toLowerCase().includes('face') || device.label.toLowerCase().includes('front'));
+            let selectedCamera = frontCameras[0]; // fallback
+
+            for (const device of frontCameras) {
+                if (!device.label.toLowerCase().includes('ultra')) {
+                    selectedCamera = device;
+                    break;
+                }
+            }
+
+            videoConstraints = { deviceId: { exact: selectedCamera.deviceId } };
+        }
+
+        return await navigator.mediaDevices.getUserMedia({ video: videoConstraints });
+    }
+
 
     const source = createMediaStreamSource(mediaStream, {
         // NOTE: This is important for world facing experiences
