@@ -30570,6 +30570,19 @@ function isMobileDevice() {
 console.log('isMobile : ' + isMobileDevice());
 console.log('LIST CAMERAS'); logVideoDevices();
 
+async function logVideoDevices() {
+    const devices = await getVideoInputDevices();
+    devices.forEach(device => {
+        console.log(`Device ID: ${device.deviceId}, Label: ${device.label}`);
+    });
+}
+
+
+async function getVideoInputDevices() {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    return devices.filter(device => device.kind === 'videoinput');
+}
+
 async function updateCamera(session) {
 
     // flipCamera.innerText = isBackFacing
@@ -30612,18 +30625,7 @@ async function updateCamera(session) {
     }
 
 
-    async function logVideoDevices() {
-        const devices = await getVideoInputDevices();
-        devices.forEach(device => {
-            console.log(`Device ID: ${device.deviceId}, Label: ${device.label}`);
-        });
-    }
 
-
-    async function getVideoInputDevices() {
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        return devices.filter(device => device.kind === 'videoinput');
-    }
     async function getMediaStreamiPad(isBackFacing) {
         let videoConstraints = {};
 
