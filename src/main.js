@@ -92,6 +92,7 @@ function isMobileDevice() {
     return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 }
 console.log('isMobile : ' + isMobileDevice());
+console.log('LIST CAMERAS'); logVideoDevices();
 
 async function updateCamera(session) {
 
@@ -133,6 +134,15 @@ async function updateCamera(session) {
         });
         // }
     }
+
+
+    async function logVideoDevices() {
+        const devices = await getVideoInputDevices();
+        devices.forEach(device => {
+            console.log(`Device ID: ${device.deviceId}, Label: ${device.label}`);
+        });
+    }
+
 
     async function getVideoInputDevices() {
         const devices = await navigator.mediaDevices.enumerateDevices();
