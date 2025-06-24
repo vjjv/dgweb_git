@@ -30853,59 +30853,60 @@ function replaceCanvasWithScreenshot() {
     // });
 
 
-}
+    // Set up download button
+    document.getElementById('btn-download').addEventListener('click', function () {
+        // Check if Web Share API is supported
+        if (isMobileDevice() || isIPad()) {
 
-// Set up download button
-document.getElementById('btn-download').addEventListener('click', function () {
-    // Check if Web Share API is supported
-    if (isMobileDevice() || isIPad()) {
-
-        if (navigator.share) {
-            // Convert dataURL to a Blob
-            fetch(dataURL)
-                .then(res => res.blob())
-                .then(blob => {
-                    const file = new File([blob], 'Dolce&Gabbana-VTO.png', { type: 'image/png' });
-                    navigator.share({
-                        files: [file],
-                        title: 'Dolce & Gabbana VTO',
-                        text: 'Check out my Dolce & Gabbana virtual try-on!'
-                    }).catch(err => {
-                        console.error('Error sharing:', err);
-                        // Fallback to download
-                        downloadImage(dataURL);
+            if (navigator.share) {
+                // Convert dataURL to a Blob
+                fetch(dataURL)
+                    .then(res => res.blob())
+                    .then(blob => {
+                        const file = new File([blob], 'Dolce&Gabbana-VTO.png', { type: 'image/png' });
+                        navigator.share({
+                            files: [file],
+                            title: 'Dolce & Gabbana VTO',
+                            text: 'Check out my Dolce & Gabbana virtual try-on!'
+                        }).catch(err => {
+                            console.error('Error sharing:', err);
+                            // Fallback to download
+                            downloadImage(dataURL);
+                        });
                     });
-                });
+            } else {
+                // Fallback to download
+                const a = document.createElement('a');
+                a.href = dataURL;
+                a.download = 'Dolce&Gabbana-VTO.png';
+                a.click();
+            }
         } else {
-            // Fallback to download
             const a = document.createElement('a');
             a.href = dataURL;
             a.download = 'Dolce&Gabbana-VTO.png';
             a.click();
         }
-    } else {
-        const a = document.createElement('a');
-        a.href = dataURL;
-        a.download = 'Dolce&Gabbana-VTO.png';
-        a.click();
-    }
-});
+    });
 
-// Set up back button: revert to first state
-document.getElementById('btn-back').addEventListener('click', function () {
-    // Remove the screenshot image if present
-    if (img.parentElement) img.parentElement.removeChild(img);
-    // Show live canvas, hide capture canvas
-    document.getElementById('live-canvas').style.display = 'block';
-    document.getElementById('canvas').style.display = 'none';
-    // Show capture button, hide action buttons
-    document.getElementById('captureButton').style.display = 'block';
-    document.getElementById('btn-back').style.display = 'none';
-    document.getElementById('btn-download').style.display = 'none';
-    // Resume live output, pause capture output
-    session.play('live');
-    session.pause('capture');
-});
+    // Set up back button: revert to first state
+    document.getElementById('btn-back').addEventListener('click', function () {
+        // Remove the screenshot image if present
+        if (img.parentElement) img.parentElement.removeChild(img);
+        // Show live canvas, hide capture canvas
+        document.getElementById('live-canvas').style.display = 'block';
+        document.getElementById('canvas').style.display = 'none';
+        // Show capture button, hide action buttons
+        document.getElementById('captureButton').style.display = 'block';
+        document.getElementById('btn-back').style.display = 'none';
+        document.getElementById('btn-download').style.display = 'none';
+        // Resume live output, pause capture output
+        session.play('live');
+        session.pause('capture');
+    });
+
+}
+
 
 
 // init();
