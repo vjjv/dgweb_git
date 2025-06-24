@@ -18,6 +18,32 @@ const ui_capture = document.getElementById('ui-capture');
 const btn_agree = document.getElementById('btn-agree');
 const btn_cancel = document.getElementById('btn-cancel');
 var firstTime = true;
+
+
+const snapAPIService = {
+    apiSpecId: "298de64a-14ae-4bb9-a385-8d83a4ba1848",
+    getRequestHandler(request) {
+        if (request.endpointId !== "capture") return;
+
+        return async (reply) => {
+            //do external fetch request here if needed
+
+            const text = 'coucou';// await res.text();
+
+            reply({
+                status: "success",
+                metadata: {},
+                body: new TextEncoder().encode(text),
+            });
+
+            // const obj = JSON.parse(text);
+            console.log("API capture signal received ");
+        };
+    },
+};
+
+
+
 console.log('splashScren : ' + window.splashScreen);
 if (window.splashScreen) {
     btn_agree.addEventListener('click', () => {
@@ -33,7 +59,7 @@ if (window.splashScreen) {
             init();
         }
     }, true);
-    btn_cancel.addEventListener('click', ()=>{
+    btn_cancel.addEventListener('click', () => {
         console.log('postMessage : close');
         window.parent?.postMessage({ action: 'close' });
     })
@@ -50,10 +76,24 @@ let isBackFacing = !window.modeStartFaceCamera;
 let mediaStream;
 
 async function init() {
-    const cameraKit = await bootstrapCameraKit({
-        // apiToken: 'eyJhbGciOiJIUzI1NiIsImtpZCI6IkNhbnZhc1MyU0hNQUNQcm9kIiwidHlwIjoiSldUIn0.eyJhdWQiOiJjYW52YXMtY2FudmFzYXBpIiwiaXNzIjoiY2FudmFzLXMyc3Rva2VuIiwibmJmIjoxNjk4MDU3NzAyLCJzdWIiOiI0MDUyY2RlNC02YzMzLTRkM2UtYTJjNC0yNzllYzc1M2VmOWR-U1RBR0lOR341MTY4YzVmNC1kYWVkLTQ1N2ItOGJmYy01Y2JhODkwOWU4OTgifQ.b0Z-TegYa2Sg-lZy_8XoPw7f_iz7eEC5BtzYooyL5K4',
-        apiToken: 'eyJhbGciOiJIUzI1NiIsImtpZCI6IkNhbnZhc1MyU0hNQUNQcm9kIiwidHlwIjoiSldUIn0.eyJhdWQiOiJjYW52YXMtY2FudmFzYXBpIiwiaXNzIjoiY2FudmFzLXMyc3Rva2VuIiwibmJmIjoxNzM4MjM2Njg5LCJzdWIiOiJmYWMzYWZjOS0zOTEyLTRlNTUtYTdiZS03MjJlOGRmYWY4ZjV-UFJPRFVDVElPTn5lOGQ0OTM1NS00YmNlLTRiYWEtODkzNC1lMWNlNmU0ZDM5M2IifQ.6sZB_6aFPL8OW-UO3Y37P7Rev7mzjS9IhNRFk7NelBI',
-    });
+    // const cameraKit = await bootstrapCameraKit({
+    //     // apiToken: 'eyJhbGciOiJIUzI1NiIsImtpZCI6IkNhbnZhc1MyU0hNQUNQcm9kIiwidHlwIjoiSldUIn0.eyJhdWQiOiJjYW52YXMtY2FudmFzYXBpIiwiaXNzIjoiY2FudmFzLXMyc3Rva2VuIiwibmJmIjoxNjk4MDU3NzAyLCJzdWIiOiI0MDUyY2RlNC02YzMzLTRkM2UtYTJjNC0yNzllYzc1M2VmOWR-U1RBR0lOR341MTY4YzVmNC1kYWVkLTQ1N2ItOGJmYy01Y2JhODkwOWU4OTgifQ.b0Z-TegYa2Sg-lZy_8XoPw7f_iz7eEC5BtzYooyL5K4',
+    //     apiToken: 'eyJhbGciOiJIUzI1NiIsImtpZCI6IkNhbnZhc1MyU0hNQUNQcm9kIiwidHlwIjoiSldUIn0.eyJhdWQiOiJjYW52YXMtY2FudmFzYXBpIiwiaXNzIjoiY2FudmFzLXMyc3Rva2VuIiwibmJmIjoxNzM4MjM2Njg5LCJzdWIiOiJmYWMzYWZjOS0zOTEyLTRlNTUtYTdiZS03MjJlOGRmYWY4ZjV-UFJPRFVDVElPTn5lOGQ0OTM1NS00YmNlLTRiYWEtODkzNC1lMWNlNmU0ZDM5M2IifQ.6sZB_6aFPL8OW-UO3Y37P7Rev7mzjS9IhNRFk7NelBI',
+    // });
+    var cameraKit = await bootstrapCameraKit(
+        {
+            apiToken:
+                "eyJhbGciOiJIUzI1NiIsImtpZCI6IkNhbnZhc1MyU0hNQUNQcm9kIiwidHlwIjoiSldUIn0.eyJhdWQiOiJjYW52YXMtY2FudmFzYXBpIiwiaXNzIjoiY2FudmFzLXMyc3Rva2VuIiwibmJmIjoxNzM4MjM2Njg5LCJzdWIiOiJmYWMzYWZjOS0zOTEyLTRlNTUtYTdiZS03MjJlOGRmYWY4ZjV-UFJPRFVDVElPTn5lOGQ0OTM1NS00YmNlLTRiYWEtODkzNC1lMWNlNmU0ZDM5M2IifQ.6sZB_6aFPL8OW-UO3Y37P7Rev7mzjS9IhNRFk7NelBI",
+        },
+        (container) =>
+            container.provides(
+                Injectable(
+                    remoteApiServicesFactory.token,
+                    [remoteApiServicesFactory.token],
+                    (existing) => [...existing, snapAPIService]
+                )
+            )
+    );
 
     //V1 Live only, no Capture Render Target
     // const session = await cameraKit.createSession({ liveRenderTarget });
@@ -206,7 +246,7 @@ async function updateCamera(session) {
     });
 
     await session.setSource(source);
-    
+
     console.log('postMessage : endLoading');
     window.parent?.postMessage({ action: 'endLoading' });
 
@@ -381,5 +421,7 @@ async function updateCamera(session) {
 
 
 }
+
+
 
 // init();
