@@ -28418,7 +28418,7 @@ const statusToResponseCodeMap = {
     cancelled: ResponseCode.CANCELLED,
     proxyError: ResponseCode.PROXY_ERROR,
 };
-const remoteApiUriHandler_remoteApiServicesFactory = Injectable("remoteApiServices", () => {
+const remoteApiServicesFactory = Injectable("remoteApiServices", () => {
     const remoteApiServices = [];
     return remoteApiServices;
 });
@@ -28535,7 +28535,7 @@ const registerUriHandlers = Injectable("registerUriHandlers", [
     lensStateFactory.token,
     uriHandlersFactory.token,
     lensKeyboardFactory.token,
-    remoteApiUriHandler_remoteApiServicesFactory.token,
+    remoteApiServicesFactory.token,
     lensRepositoryFactory.token,
     sessionStateFactory.token,
     metricsClientFactory.token,
@@ -30260,7 +30260,7 @@ function bootstrapCameraKit(configuration, provide) {
                 .provides(defaultFetchHandlerFactory)
                 .provides(remoteMediaAssetLoaderFactory)
                 .provides(lensSourcesFactory)
-                .provides(remoteApiUriHandler_remoteApiServicesFactory)
+                .provides(remoteApiServicesFactory)
                 .provides(uriHandlersFactory)
                 .provides(geoDataProviderFactory)
                 .provides(externalMetricsSubjectFactory);
