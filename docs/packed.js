@@ -30494,6 +30494,7 @@ const ui_capture = document.getElementById('ui-capture');
 const btn_agree = document.getElementById('btn-agree');
 const btn_cancel = document.getElementById('btn-cancel');
 var firstTime = true;
+let session;
 
 
 const snapAPIService = {
@@ -30578,7 +30579,7 @@ async function init() {
 
     //V2 Live and Capture available : Let Camera Kit create a new canvas, then append it to the DOM
     const canvasContainer = document.getElementById('canvas-part');
-    const session = await cameraKit.createSession();
+    session = await cameraKit.createSession();
     session.output.live.setAttribute('id', 'live-canvas');
     session.output.capture.setAttribute('id', 'canvas');
     canvasContainer.appendChild(session.output.capture);
