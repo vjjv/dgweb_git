@@ -20,7 +20,8 @@ function getURLorFallback(key, defaultValue) {
   return defaultValue;
 }
 
-window.lensID = getURLorFallback('lensID', '96a1bc1f-f39a-44e5-aa85-b337029d6093'); // DG-web
+// window.lensID = getURLorFallback('lensID', '96a1bc1f-f39a-44e5-aa85-b337029d6093'); // DG-web
+window.lensID = getURLorFallback('lensID', '24948c05-b609-48d7-bd5f-20f9ff471b51'); // DG-ARMIRROR-API
 window.groupID = getURLorFallback('groupID', 'f7f4e367-f4b3-4de5-8e81-e9c842f2bf0b'); // LIVE_PROD Group
 window.modePhoto = getURLorFallback('modePhoto', true);
 window.modeVideo = getURLorFallback('modeVideo', false);
