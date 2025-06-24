@@ -6,6 +6,7 @@ import {
     CameraKitSession,
     createMediaStreamSource,
     Transform2D,
+    Injectable,
 } from '@snap/camera-kit';
 
 const liveRenderTarget = document.getElementById('canvas');

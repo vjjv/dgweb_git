@@ -416,7 +416,7 @@ exports.splitHeaderValue = splitHeaderValue;
 "use strict";
 
 ;// ./node_modules/@snap/ts-inject/dist/esm/Injectable.js
-function Injectable_Injectable(token, dependenciesOrFn, maybeFn) {
+function Injectable(token, dependenciesOrFn, maybeFn) {
     const dependencies = Array.isArray(dependenciesOrFn) ? dependenciesOrFn : [];
     const fn = typeof dependenciesOrFn === "function" ? dependenciesOrFn : maybeFn;
     if (!fn) {
@@ -433,7 +433,7 @@ function Injectable_Injectable(token, dependenciesOrFn, maybeFn) {
     return factory;
 }
 function InjectableCompat(token, dependencies, fn) {
-    return Injectable_Injectable(token, dependencies, fn);
+    return Injectable(token, dependencies, fn);
 }
 function ClassInjectable(token, cls) {
     const factory = (...args) => new cls(...args);
@@ -528,7 +528,7 @@ const createCameraKitConfigurationFactory = (configuration) => {
     if (overrides) {
         console.warn("Configuration overrides applied", overrides);
     }
-    return Injectable_Injectable(configurationToken, () => {
+    return Injectable(configurationToken, () => {
         const safeConfig = Object.assign(Object.assign({}, configuration), { lensPerformance: configuration.lensPerformance instanceof Promise
                 ?
                     configuration.lensPerformance.catch(() => defaultConfiguration.lensPerformance)
@@ -1243,7 +1243,7 @@ class PartialContainer_PartialContainer {
     provides(fn) {
         return new PartialContainer_PartialContainer({ ...this.injectables, [fn.token]: fn });
     }
-    providesValue = (token, value) => this.provides(Injectable_Injectable(token, [], () => value));
+    providesValue = (token, value) => this.provides(Injectable(token, [], () => value));
     providesClass = (token, cls) => this.provides(ClassInjectable(token, cls));
     getFactories(parent) {
         let factories = undefined;
@@ -1340,7 +1340,7 @@ class Container {
         return this.providesService(fnOrContainer);
     }
     providesClass = (token, cls) => this.providesService(ClassInjectable(token, cls));
-    providesValue = (token, value) => this.providesService(Injectable_Injectable(token, [], () => value));
+    providesValue = (token, value) => this.providesService(Injectable(token, [], () => value));
     appendValue = (token, value) => this.providesService(ConcatInjectable(token, () => value));
     appendClass = (token, cls) => this.providesService(ConcatInjectable(token, () => this.providesClass(token, cls).get(token)));
     append = (fn) => this.providesService(ConcatInjectable(fn.token, () => this.providesService(fn).get(fn.token)));
@@ -2428,7 +2428,7 @@ const createTimeoutHandler = (options = {}) => {
 
 
 
-const defaultFetchHandlerFactory = Injectable_Injectable("defaultFetchHandler", () => {
+const defaultFetchHandlerFactory = Injectable("defaultFetchHandler", () => {
     return (new HandlerChainBuilder(fetch)
         .map(createTimeoutHandler({ timeout: 20 * 1000 }))
         .map(createNoCorsRetryingFetchHandler())
@@ -2461,7 +2461,7 @@ function withRequestPriority(request, lowPriority) {
 
 
 
-const remoteMediaAssetLoaderFactory = Injectable_Injectable("remoteMediaAssetLoader", [defaultFetchHandlerFactory.token], (fetchHandler) => {
+const remoteMediaAssetLoaderFactory = Injectable("remoteMediaAssetLoader", [defaultFetchHandlerFactory.token], (fetchHandler) => {
     const handler = new HandlerChainBuilder(fetchHandler).map(createArrayBufferParsingHandler()).handler;
     return function remoteMediaAssetLoader({ assetDescriptor: { assetId }, lowPriority }) {
         return tslib_es6_awaiter(this, void 0, void 0, function* () {
@@ -7391,7 +7391,7 @@ const createHeadersModifyingFetchHandler = (modifyHeaders) => (next) => (input, 
 
 
 
-const cameraKitServiceFetchHandlerFactory = Injectable_Injectable("cameraKitServiceFetchHandler", [configurationToken, defaultFetchHandlerFactory.token], ({ apiToken }, defaultFetchHandler) => {
+const cameraKitServiceFetchHandlerFactory = Injectable("cameraKitServiceFetchHandler", [configurationToken, defaultFetchHandlerFactory.token], ({ apiToken }, defaultFetchHandler) => {
     return new HandlerChainBuilder(defaultFetchHandler).map(createHeadersModifyingFetchHandler((headers) => {
         headers.append("x-snap-client-user-agent", getCameraKitUserAgent());
         headers.append("authorization", `Bearer ${apiToken}`);
@@ -7604,7 +7604,7 @@ const createRequestStateEmittingHandler = (requestStateEventTarget) => (next) =>
         throw error;
     }
 });
-const requestStateEventTargetFactory = Injectable_Injectable("requestStateEventTarget", () => new TypedEventTarget());
+const requestStateEventTargetFactory = Injectable("requestStateEventTarget", () => new TypedEventTarget());
 //# sourceMappingURL=requestStateEmittingHandler.js.map
 ;// ./node_modules/@snap/camera-kit/dist/clients/grpcHandler.js
 
@@ -7621,7 +7621,7 @@ function isMetricsGrpcMethod(method) {
     return (method === MetricsDefinition.methods.setOperationalMetrics.name ||
         method === MetricsDefinition.methods.setBusinessEvents.name);
 }
-const grpcHandlerFactory = Injectable_Injectable("grpcHandlerFactory", [configurationToken, cameraKitServiceFetchHandlerFactory.token, requestStateEventTargetFactory.token], (configuration, fetchHandler, requestStateEventTarget) => {
+const grpcHandlerFactory = Injectable("grpcHandlerFactory", [configurationToken, cameraKitServiceFetchHandlerFactory.token, requestStateEventTargetFactory.token], (configuration, fetchHandler, requestStateEventTarget) => {
     const host = `https://${configuration.apiHostname}`;
     const fetchHandlerWithMetrics = new HandlerChainBuilder(fetchHandler).map(createRequestStateEmittingHandler(requestStateEventTarget)).handler;
     const transport = (options) => {
@@ -17324,7 +17324,7 @@ class PageVisibility {
         this.visibilityTransition = false;
     }
 }
-const pageVisibilityFactory = Injectable_Injectable("pageVisibility", () => new PageVisibility());
+const pageVisibilityFactory = Injectable("pageVisibility", () => new PageVisibility());
 //# sourceMappingURL=pageVisibility.js.map
 ;// ./node_modules/@snap/camera-kit/dist/generated-proto/blizzard/cameraKitEvents.js
 
@@ -18714,8 +18714,8 @@ class MetricsClient {
     }
 }
 const validExternalMetrics = /^push2web_/;
-const externalMetricsSubjectFactory = Injectable_Injectable("externalMetricsSubject", () => new Subject());
-const metricsClientFactory = Injectable_Injectable("metricsClient", [externalMetricsSubjectFactory.token, grpcHandlerFactory.token, pageVisibilityFactory.token], (externalMetricsSubjectFactory, grpcHandler, pageVisibility) => {
+const externalMetricsSubjectFactory = Injectable("externalMetricsSubject", () => new Subject());
+const metricsClientFactory = Injectable("metricsClient", [externalMetricsSubjectFactory.token, grpcHandlerFactory.token, pageVisibilityFactory.token], (externalMetricsSubjectFactory, grpcHandler, pageVisibility) => {
     const metrics = new MetricsClient(createTsProtoClient(MetricsDefinition, grpcHandler), pageVisibility);
     externalMetricsSubjectFactory.pipe(filter((metric) => validExternalMetrics.test(metric.name))).subscribe({
         next: (metric) => {
@@ -18747,7 +18747,7 @@ const metricsClientFactory = Injectable_Injectable("metricsClient", [externalMet
 
 const COF_REQUEST_TYPE = "cof";
 const cofHandler_logger = getLogger("cofHandler");
-const cofHandlerFactory = Injectable_Injectable("cofHandler", [configurationToken, requestStateEventTargetFactory.token, metricsClientFactory.token], (config, requestStateEventTarget, metrics) => {
+const cofHandlerFactory = Injectable("cofHandler", [configurationToken, requestStateEventTargetFactory.token, metricsClientFactory.token], (config, requestStateEventTarget, metrics) => {
     const cofCache = new ExpiringPersistence(() => convertDaysToSeconds(365), new IndexedDBPersistence({ databaseName: "COFCache" }));
     const getCacheKey = (r) => JSON.stringify(r);
     return (new HandlerChainBuilder((request, _a) => tslib_es6_awaiter(void 0, void 0, void 0, function* () {
@@ -18873,7 +18873,7 @@ class RemoteConfiguration {
         }));
     }
 }
-const remoteConfigurationFactory = Injectable_Injectable("remoteConfiguration", [configurationToken, cofHandlerFactory.token, grpcHandlerFactory.token], (config, cofHandler, grpcHandler) => {
+const remoteConfigurationFactory = Injectable("remoteConfiguration", [configurationToken, cofHandlerFactory.token, grpcHandlerFactory.token], (config, cofHandler, grpcHandler) => {
     const remoteConfig = new RemoteConfiguration(config.lensPerformance, cofHandler, createTsProtoClient(MetricsDefinition, grpcHandler));
     remoteConfig.get("").pipe(take(1)).subscribe();
     return remoteConfig;
@@ -18897,7 +18897,7 @@ const hasStringValue = (value) => {
 const isAssetConfig = (value) => {
     return typeguards_isRecord(value) && typeguards_isString(value.url) && (value.checksum === undefined || typeguards_isString(value.checksum));
 };
-const deviceDependentAssetLoaderFactory = Injectable_Injectable("deviceDependentAssetLoader", [defaultFetchHandlerFactory.token, remoteConfigurationFactory.token], (fetchHandler, remoteConfiguration) => {
+const deviceDependentAssetLoaderFactory = Injectable("deviceDependentAssetLoader", [defaultFetchHandlerFactory.token, remoteConfigurationFactory.token], (fetchHandler, remoteConfiguration) => {
     const assetHandler = new HandlerChainBuilder(fetchHandler).map(createArrayBufferParsingHandler()).handler;
     return function deviceDependentAssetLoader({ assetDescriptor: { assetId }, lowPriority, }) {
         return tslib_es6_awaiter(this, void 0, void 0, function* () {
@@ -18939,7 +18939,7 @@ const deviceDependentAssetLoaderFactory = Injectable_Injectable("deviceDependent
 
 
 
-const staticAssetLoaderFactory = Injectable_Injectable("staticAssetLoader", [defaultFetchHandlerFactory.token], (fetchHandler) => {
+const staticAssetLoaderFactory = Injectable("staticAssetLoader", [defaultFetchHandlerFactory.token], (fetchHandler) => {
     const handler = new HandlerChainBuilder(fetchHandler).map(createArrayBufferParsingHandler()).handler;
     return ({ assetDescriptor: { assetId }, assetManifest, lowPriority }) => tslib_es6_awaiter(void 0, void 0, void 0, function* () {
         var _a;
@@ -19443,7 +19443,7 @@ const lensCoreFactory_logger = getLogger("lensCoreFactory");
 const findMatch = (regex, strings) => strings.find((s) => regex.test(s));
 const LENS_CORE_JS_REQUEST_TYPE = "lens_core_js";
 const LENS_CORE_WASM_REQUEST_TYPE = "lens_core_wasm";
-const lensCoreFactory = Injectable_Injectable("lensCore", [defaultFetchHandlerFactory.token, configurationToken, requestStateEventTargetFactory.token], (handler, { lensCoreOverrideUrls, wasmEndpointOverride }, requestStateEventTarget) => tslib_es6_awaiter(void 0, void 0, void 0, function* () {
+const lensCoreFactory = Injectable("lensCore", [defaultFetchHandlerFactory.token, configurationToken, requestStateEventTargetFactory.token], (handler, { lensCoreOverrideUrls, wasmEndpointOverride }, requestStateEventTarget) => tslib_es6_awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
     let lensCoreJS;
     let lensCoreWASM;
@@ -19669,7 +19669,7 @@ function toPublicLens({ id, groupId, name, content, vendorData, cameraFacingPref
 ;// ./node_modules/@snap/camera-kit/dist/metrics/metricsEventTarget.js
 
 
-const metricsEventTargetFactory = Injectable_Injectable("metricsEventTarget", () => new TypedEventTarget());
+const metricsEventTargetFactory = Injectable("metricsEventTarget", () => new TypedEventTarget());
 //# sourceMappingURL=metricsEventTarget.js.map
 ;// ./node_modules/@snap/camera-kit/dist/lens/assets/LensAssetRepository.js
 
@@ -19797,7 +19797,7 @@ class LensAssetRepository {
         });
     }
 }
-const lensAssetRepositoryFactory = Injectable_Injectable("lensAssetRepository", [
+const lensAssetRepositoryFactory = Injectable("lensAssetRepository", [
     lensCoreFactory.token,
     deviceDependentAssetLoaderFactory.token,
     remoteMediaAssetLoaderFactory.token,
@@ -20396,7 +20396,7 @@ const Envelope = {
 
 
 
-const lensSourcesFactory = Injectable_Injectable("lensSources", () => []);
+const lensSourcesFactory = Injectable("lensSources", () => []);
 function loadLensesFromSources(sources, groupId, lensId) {
     return tslib_es6_awaiter(this, void 0, void 0, function* () {
         const source = sources.find((source) => source.isGroupOwner(groupId));
@@ -20547,7 +20547,7 @@ let LensRepository = (() => {
         _a;
 })();
 
-const lensRepositoryFactory = Injectable_Injectable("LensRepository", [
+const lensRepositoryFactory = Injectable("LensRepository", [
     requestStateEventTargetFactory.token,
     defaultFetchHandlerFactory.token,
     lensSourcesFactory.token,
@@ -23984,7 +23984,7 @@ function createVideoSource(video, options = {}) {
 ;// ./node_modules/@snap/camera-kit/dist/logger/logEntries.js
 
 
-const logEntriesFactory = Injectable_Injectable("logEntries", () => resetLogger().asObservable());
+const logEntriesFactory = Injectable("logEntries", () => resetLogger().asObservable());
 //# sourceMappingURL=logEntries.js.map
 ;// ./node_modules/@snap/camera-kit/dist/session/LensPerformanceMeasurement.js
 const getDefaultFrameMetricsState = () => ({
@@ -24233,7 +24233,7 @@ function forkJoin() {
 
 
 const LensPersistenceStore_logger = getLogger("LensPersistenceStore");
-const lensPersistenceStoreFactory = Injectable_Injectable("lensPersistenceStore", [lensCoreFactory.token], (lensCore) => {
+const lensPersistenceStoreFactory = Injectable("lensPersistenceStore", [lensCoreFactory.token], (lensCore) => {
     const db = new IndexedDBPersistence({ databaseName: "lensPersistenceStore" });
     lensCore.registerSavePersistentStoreCallback((id, data) => tslib_es6_awaiter(void 0, void 0, void 0, function* () {
         try {
@@ -25125,7 +25125,7 @@ function showFindGuardianDialog() {
         ],
     });
 }
-const legalPromptFactory = Injectable_Injectable("legalPrompt", () => {
+const legalPromptFactory = Injectable("legalPrompt", () => {
     return function legalPrompt(privacyPolicy, termsOfService, learnMore, childrenProtectionActRestricted) {
         const legalMessage = childrenProtectionActRestricted
             ? localizedString("legalPromptVariantGMessage")
@@ -25227,7 +25227,7 @@ const getDocumentOrDefault = (documents) => (type) => {
     var _a;
     return ((_a = documents.find((d) => d.type === type)) !== null && _a !== void 0 ? _a : defaultLegalPrompt.documents.find((d) => d.type === type));
 };
-const legalStateFactory = Injectable_Injectable("legalState", [remoteConfigurationFactory.token, legalPromptFactory.token], (remoteConfig, legalPrompt) => {
+const legalStateFactory = Injectable("legalState", [remoteConfigurationFactory.token, legalPromptFactory.token], (remoteConfig, legalPrompt) => {
     const persistance = new ExpiringPersistence(() => tosContentHashExpiry, new IndexedDBPersistence({ databaseName: "Legal" }));
     const getLastAcceptedTosContentHash = () => from_from(persistance.retrieve(tosContentHashKey).catch((error) => legalState_logger.warn(error)));
     const setLastAcceptedTosContentHash = (hash) => persistance.store(tosContentHashKey, hash).catch((error) => legalState_logger.warn(error));
@@ -25321,7 +25321,7 @@ function unsubscribed(callback) {
 
 const fetchWatermarkLens_logger = getLogger("fetchWatermarkLens");
 const watermarksLensGroup = "watermarks";
-const fetchWatermarkLens = Injectable_Injectable("fetchWatermarkLens", [remoteConfigurationFactory.token, lensRepositoryFactory.token], (remoteConfiguration, lensRepository) => {
+const fetchWatermarkLens = Injectable("fetchWatermarkLens", [remoteConfigurationFactory.token, lensRepositoryFactory.token], (remoteConfiguration, lensRepository) => {
     remoteConfiguration
         .getInitializationConfig()
         .pipe(take(1))
@@ -25338,7 +25338,7 @@ const fetchWatermarkLens = Injectable_Injectable("fetchWatermarkLens", [remoteCo
 //# sourceMappingURL=fetchWatermarkLens.js.map
 ;// ./node_modules/@snap/camera-kit/dist/lens/userDataAccessResolver.js
 
-const userDataAccessResolverFactory = Injectable_Injectable("userDataAccessResolver", () => () => "unrestricted");
+const userDataAccessResolverFactory = Injectable("userDataAccessResolver", () => () => "unrestricted");
 //# sourceMappingURL=userDataAccessResolver.js.map
 ;// ./node_modules/@snap/camera-kit/dist/session/lensState.js
 
@@ -25365,7 +25365,7 @@ const createLensState = () => {
     const states = defineStates(defineState("noLensApplied")(), defineState("applyingLens")(), defineState("lensApplied")());
     return new StateMachine(actions, states, states.noLensApplied(), (events) => merge(events.pipe(inStates("noLensApplied", "applyingLens", "lensApplied"), forActions("applyLens"), map(([a]) => states.applyingLens(a.data.lens))), events.pipe(inStates("applyingLens"), forActions("applyLensComplete"), map(([a]) => states.lensApplied(a.data))), events.pipe(inStates("applyingLens"), forActions("applyLensFailed"), map(() => states.noLensApplied())), events.pipe(inStates("lensApplied"), forActions("removeLensComplete"), map(() => states.noLensApplied()))));
 };
-const lensStateFactory = Injectable_Injectable("lensState", [
+const lensStateFactory = Injectable("lensState", [
     lensCoreFactory.token,
     lensRepositoryFactory.token,
     lensAssetRepositoryFactory.token,
@@ -25561,7 +25561,7 @@ const createSessionState = () => {
         return merge(events.pipe(forActions("resume"), map(([a]) => states.active(a.data))), events.pipe(forActions("suspend"), map(() => states.inactive())), events.pipe(forActions("destroy"), map(() => states.destroyed())));
     });
 };
-const sessionStateFactory = Injectable_Injectable("sessionState", () => createSessionState());
+const sessionStateFactory = Injectable("sessionState", () => createSessionState());
 //# sourceMappingURL=sessionState.js.map
 ;// ./node_modules/@snap/camera-kit/dist/session/LensKeyboard.js
 
@@ -25673,7 +25673,7 @@ class LensKeyboard {
         }
     }
 }
-const lensKeyboardFactory = Injectable_Injectable("lensKeyboard", [lensStateFactory.token], (lensState) => new LensKeyboard(lensState));
+const lensKeyboardFactory = Injectable("lensKeyboard", [lensStateFactory.token], (lensState) => new LensKeyboard(lensState));
 //# sourceMappingURL=LensKeyboard.js.map
 ;// ./node_modules/@snap/camera-kit/dist/session/CameraKitSessionEvents.js
 const isReachable = (_) => false;
@@ -25697,7 +25697,7 @@ function isPublicLensError(value) {
 
 
 const frameEvents_logger = getLogger("FrameEvents");
-const frameEventsFactory = Injectable_Injectable("frameEvents", [lensCoreFactory.token], (lensCore) => {
+const frameEventsFactory = Injectable("frameEvents", [lensCoreFactory.token], (lensCore) => {
     const frameEventsSubject = new Subject();
     lensCore
         .setOnFrameProcessedCallback({
@@ -25948,7 +25948,7 @@ let CameraKitSession_CameraKitSession = (() => {
         _a;
 })();
 
-const cameraKitSessionFactory = Injectable_Injectable("CameraKitSession", [
+const cameraKitSessionFactory = Injectable("CameraKitSession", [
     lensCoreFactory.token,
     logEntriesFactory.token,
     lensKeyboardFactory.token,
@@ -25970,7 +25970,7 @@ const cameraKitSessionFactory = Injectable_Injectable("CameraKitSession", [
 
 const LensAssetsProvider_logger = getLogger("LensAssetProvider");
 const maxConsecutiveErrors = 3;
-const registerLensAssetsProvider = Injectable_Injectable("registerLensAssetsProvider", [
+const registerLensAssetsProvider = Injectable("registerLensAssetsProvider", [
     lensCoreFactory.token,
     lensRepositoryFactory.token,
     lensAssetRepositoryFactory.token,
@@ -26421,7 +26421,7 @@ const RemoteApiSpecsDefinition = {
 
 
 
-const remoteApiSpecsClientFactory = Injectable_Injectable("remoteApiSpecsClient", [grpcHandlerFactory.token], (grpcHandler) => createTsProtoClient(RemoteApiSpecsDefinition, grpcHandler));
+const remoteApiSpecsClientFactory = Injectable("remoteApiSpecsClient", [grpcHandlerFactory.token], (grpcHandler) => createTsProtoClient(RemoteApiSpecsDefinition, grpcHandler));
 //# sourceMappingURL=remoteApiSpecsClient.js.map
 ;// ./node_modules/rxjs/dist/esm5/internal/util/isDate.js
 function isDate_isValidDate(value) {
@@ -26898,7 +26898,7 @@ function isUriResponse(value) {
         (isArrayBuffer(value.data) || isTypedArray(value.data)) &&
         (isUndefined(value.metadata) || typeguards_predicateRecordValues(typeguards_isString)(value.metadata)));
 }
-const uriHandlersFactory = Injectable_Injectable("UriHandlers", () => {
+const uriHandlersFactory = Injectable("UriHandlers", () => {
     const uriHandlers = [];
     return uriHandlers;
 });
@@ -28418,7 +28418,7 @@ const statusToResponseCodeMap = {
     cancelled: ResponseCode.CANCELLED,
     proxyError: ResponseCode.PROXY_ERROR,
 };
-const remoteApiUriHandler_remoteApiServicesFactory = Injectable_Injectable("remoteApiServices", () => {
+const remoteApiUriHandler_remoteApiServicesFactory = Injectable("remoteApiServices", () => {
     const remoteApiServices = [];
     return remoteApiServices;
 });
@@ -28529,7 +28529,7 @@ function createRemoteApiUriHandler(registeredServices, sessionState, lensState, 
 
 
 const uriHandlersRegister_logger = getLogger("uriHandlersRegister");
-const registerUriHandlers = Injectable_Injectable("registerUriHandlers", [
+const registerUriHandlers = Injectable("registerUriHandlers", [
     configurationToken,
     lensCoreFactory.token,
     lensStateFactory.token,
@@ -28687,7 +28687,7 @@ function reportExceptionToBlizzard(logEntries, metricsEventTarget, metrics, lens
         metrics.setOperationalMetrics(Count.count("handled_exception", 1, { type: error.name }));
     });
 }
-const reportGlobalException = Injectable_Injectable("reportGlobalException", [logEntriesFactory.token, metricsEventTargetFactory.token, metricsClientFactory.token], (logEntries, metricsEventTarget, metrics) => {
+const reportGlobalException = Injectable("reportGlobalException", [logEntriesFactory.token, metricsEventTargetFactory.token, metricsClientFactory.token], (logEntries, metricsEventTarget, metrics) => {
     const cancellationSubject = new Subject();
     reportExceptionToBlizzard(logEntries.pipe(takeUntil(cancellationSubject)), metricsEventTarget, metrics);
     return {
@@ -28702,7 +28702,7 @@ const reportGlobalException = Injectable_Injectable("reportGlobalException", [lo
 
 
 
-const reportSessionException = Injectable_Injectable("reportSessionException", [reportGlobalException.token, lensStateFactory.token], (globalExceptionReporter, lensState) => {
+const reportSessionException = Injectable("reportSessionException", [reportGlobalException.token, lensStateFactory.token], (globalExceptionReporter, lensState) => {
     globalExceptionReporter.attachLensContext(lensState);
 });
 //# sourceMappingURL=reportSessionException.js.map
@@ -28742,7 +28742,7 @@ class Histogram extends Metric {
 
 
 const reportableBenchmarks = ["gflops"];
-const reportBenchmarks = Injectable_Injectable("reportBenchmarks", [metricsEventTargetFactory.token, metricsClientFactory.token, configurationToken], (metricsEventTarget, metrics, config) => tslib_es6_awaiter(void 0, void 0, void 0, function* () {
+const reportBenchmarks = Injectable("reportBenchmarks", [metricsEventTargetFactory.token, metricsClientFactory.token, configurationToken], (metricsEventTarget, metrics, config) => tslib_es6_awaiter(void 0, void 0, void 0, function* () {
     if (config.lensPerformance === undefined)
         return;
     const lensPerformance = yield config.lensPerformance;
@@ -28856,7 +28856,7 @@ const isRelevantRequest = (value) => {
     const reportableMetricDimensions = value;
     return reportableMetricRequestTypes.includes(reportableMetricDimensions.requestType);
 };
-const reportHttpMetrics = Injectable_Injectable("reportHttpMetrics", [metricsClientFactory.token, requestStateEventTargetFactory.token], (metrics, requestStateEventTarget) => {
+const reportHttpMetrics = Injectable("reportHttpMetrics", [metricsClientFactory.token, requestStateEventTargetFactory.token], (metrics, requestStateEventTarget) => {
     scan_scan({ name: "inProgress", inProgress: new Map() })(requestStateEventTarget, ["started", "completed", "errored"], (state, event) => {
         var _a;
         const { inProgress } = state;
@@ -28915,7 +28915,7 @@ const reportHttpMetrics = Injectable_Injectable("reportHttpMetrics", [metricsCli
 
 
 
-const reportLegalState = Injectable_Injectable("reportLegalState", [legalStateFactory.token, metricsEventTargetFactory.token, metricsClientFactory.token], (legalState, metricsEventTarget, metrics) => {
+const reportLegalState = Injectable("reportLegalState", [legalStateFactory.token, metricsEventTargetFactory.token, metricsClientFactory.token], (legalState, metricsEventTarget, metrics) => {
     legalState.events
         .pipe(forActions("accept", "reject"), map(([{ data, name }]) => ({
         name: "legalPrompt",
@@ -28950,7 +28950,7 @@ const isLensOrAssetRequest = (value) => {
     const requestType = value["requestType"];
     return typeof requestType === "string" && relevantRequestTypes.includes(requestType);
 };
-const reportLensAndAssetDownload = Injectable_Injectable("reportLensAndAssetDownload", [metricsEventTargetFactory.token, metricsClientFactory.token, requestStateEventTargetFactory.token], (metricsEventTarget, metrics, requestStateEventTarget) => {
+const reportLensAndAssetDownload = Injectable("reportLensAndAssetDownload", [metricsEventTargetFactory.token, metricsClientFactory.token, requestStateEventTargetFactory.token], (metricsEventTarget, metrics, requestStateEventTarget) => {
     scan_scan({ name: "inProgress", inProgress: new Map() })(requestStateEventTarget, ["started", "completed", "errored"], (state, event) => {
         var _a;
         const { inProgress } = state;
@@ -29034,7 +29034,7 @@ const reportLensAndAssetDownload = Injectable_Injectable("reportLensAndAssetDown
 
 
 
-const reportLensValidationFailed = Injectable_Injectable("reportLensValidationFailed", [lensStateFactory.token, metricsEventTargetFactory.token], (lensState, metricsEventTarget) => {
+const reportLensValidationFailed = Injectable("reportLensValidationFailed", [lensStateFactory.token, metricsEventTargetFactory.token], (lensState, metricsEventTarget) => {
     lensState.events
         .pipe(forActions("applyLensFailed"), filter(([a]) => a.data.error.name === "LensContentValidationError"))
         .subscribe({
@@ -29215,7 +29215,7 @@ function isFirstTimeWithinPeriods(lensId, persistence) {
         return { isLensFirstWithinDay, isLensFirstWithinMonth };
     });
 }
-const reportLensView = Injectable_Injectable("reportLensView", [
+const reportLensView = Injectable("reportLensView", [
     cameraKitSessionFactory.token,
     lensStateFactory.token,
     sessionStateFactory.token,
@@ -29284,7 +29284,7 @@ const reportLensView = Injectable_Injectable("reportLensView", [
 
 
 const reportLensWait_viewTimeThresholdSec = 0.1;
-const reportLensWait = Injectable_Injectable("reportLensWait", [lensStateFactory.token, metricsEventTargetFactory.token], (lensState, metricsEventTarget) => {
+const reportLensWait = Injectable("reportLensWait", [lensStateFactory.token, metricsEventTargetFactory.token], (lensState, metricsEventTarget) => {
     lensState.events
         .pipe(forActions("applyLens"), mergeMap(([a]) => {
         const lensId = a.data.lens.id;
@@ -29319,7 +29319,7 @@ const reportLensWait = Injectable_Injectable("reportLensWait", [lensStateFactory
 
 
 
-const reportUserSession = Injectable_Injectable("reportUserSession", [metricsEventTargetFactory.token], (metricsEventTarget) => tslib_es6_awaiter(void 0, void 0, void 0, function* () {
+const reportUserSession = Injectable("reportUserSession", [metricsEventTargetFactory.token], (metricsEventTarget) => tslib_es6_awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
     const userSessionKey = "userSessionInfo";
     const db = new IndexedDBPersistence({ databaseName: "SessionHistory" });
@@ -29380,7 +29380,7 @@ const reportUserSession = Injectable_Injectable("reportUserSession", [metricsEve
 
 
 
-const reportPlatformCapabilities = Injectable_Injectable("reportPlatformCapabilities", [metricsClientFactory.token], (metrics) => tslib_es6_awaiter(void 0, void 0, void 0, function* () {
+const reportPlatformCapabilities = Injectable("reportPlatformCapabilities", [metricsClientFactory.token], (metrics) => tslib_es6_awaiter(void 0, void 0, void 0, function* () {
     const { webgl, wasm, webxr } = yield getPlatformCapabilities();
     metrics.setOperationalMetrics(Count.count(joinMetricNames(["platform", "webgl"]), webgl.supported ? 1 : 0));
     metrics.setOperationalMetrics(Count.count(joinMetricNames(["platform", "wasm"]), wasm.supported ? 1 : 0));
@@ -29586,7 +29586,7 @@ function pickClientImage(clientInterfaceData, lensCore, filePicker) {
 //# sourceMappingURL=imagePicker.js.map
 ;// ./node_modules/@snap/camera-kit/dist/lens-client-interface/filePicker.js
 
-const filePickerFactory = Injectable_Injectable("filePicker", () => (options, openDefaultPicker) => openDefaultPicker(options));
+const filePickerFactory = Injectable("filePicker", () => (options, openDefaultPicker) => openDefaultPicker(options));
 //# sourceMappingURL=filePicker.js.map
 ;// ./node_modules/@snap/camera-kit/dist/lens-client-interface/lensClientInterface.js
 
@@ -29597,7 +29597,7 @@ const filePickerFactory = Injectable_Injectable("filePicker", () => (options, op
 
 
 const lensClientInterface_logger = getLogger("lensClientInterface");
-const registerLensClientInterfaceHandler = Injectable_Injectable("registerLensClientInterfaceHandler", [lensCoreFactory.token, filePickerFactory.token], (lensCore, filePicker) => {
+const registerLensClientInterfaceHandler = Injectable("registerLensClientInterfaceHandler", [lensCoreFactory.token, filePickerFactory.token], (lensCore, filePicker) => {
     if (!lensCore.setClientInterfaceRequestHandler) {
         lensClientInterface_logger.warn("Current LensCore version doesn't support lens client interface requests");
         return;
@@ -29620,7 +29620,7 @@ const registerLensClientInterfaceHandler = Injectable_Injectable("registerLensCl
 
 
 const preloadConfiguration_logger = getLogger("setPreloadedConfiguration");
-const setPreloadedConfiguration = Injectable_Injectable("setPreloadedConfiguration", [lensCoreFactory.token, remoteConfigurationFactory.token], (lensCore, remoteConfiguration) => {
+const setPreloadedConfiguration = Injectable("setPreloadedConfiguration", [lensCoreFactory.token, remoteConfigurationFactory.token], (lensCore, remoteConfiguration) => {
     remoteConfiguration
         .getNamespace(Namespace.LENS_CORE_CONFIG)
         .pipe(take(1))
@@ -29655,7 +29655,7 @@ function isHourlyWeatherForecast(value) {
         typeguards_isString(value.weatherCondition) &&
         typeguards_isString(value.localizedWeatherCondition));
 }
-const geoDataProviderFactory = Injectable_Injectable("geoDataProvider", () => {
+const geoDataProviderFactory = Injectable("geoDataProvider", () => {
     return () => undefined;
 });
 //# sourceMappingURL=geoDataProvider.js.map
@@ -29666,7 +29666,7 @@ const geoDataProviderFactory = Injectable_Injectable("geoDataProvider", () => {
 
 
 const registerGeoDataProvider_logger = getLogger("registerGeoDataProvider");
-const registerGeoDataProvider = Injectable_Injectable("registerGeoDataProvider", [lensCoreFactory.token, geoDataProviderFactory.token], (lensCore, getGeoData) => {
+const registerGeoDataProvider = Injectable("registerGeoDataProvider", [lensCoreFactory.token, geoDataProviderFactory.token], (lensCore, getGeoData) => {
     if (!lensCore.setGeoDataProvider) {
         registerGeoDataProvider_logger.warn("setGeoDataProvider is not defined.");
         return;
@@ -29801,7 +29801,7 @@ let CameraKit = (() => {
         })(),
         _a;
 })();
-const cameraKitFactory = Injectable_Injectable("CameraKit", [
+const cameraKitFactory = Injectable("CameraKit", [
     lensRepositoryFactory.token,
     metricsEventTargetFactory.token,
     lensCoreFactory.token,
@@ -30004,7 +30004,7 @@ function getAppVendorAndPartnerUuid(configuration, remoteConfiguration) {
         return of({ appVendorUuid: undefined, partnerUuid: configuration.analyticsId });
     }));
 }
-const businessEventsReporterFactory = Injectable_Injectable("businessEventsReporter", [
+const businessEventsReporterFactory = Injectable("businessEventsReporter", [
     metricsEventTargetFactory.token,
     metricsClientFactory.token,
     configurationToken,
@@ -30069,7 +30069,7 @@ const businessEventsReporterFactory = Injectable_Injectable("businessEventsRepor
 
 
 
-const registerLogEntriesSubscriber = Injectable_Injectable("registerLogEntriesSubscriber", [configurationToken, logEntriesFactory.token], (configuration, logEntries) => {
+const registerLogEntriesSubscriber = Injectable("registerLogEntriesSubscriber", [configurationToken, logEntriesFactory.token], (configuration, logEntries) => {
     logEntries
         .pipe(filter((entry) => logLevelMap[entry.level] >= logLevelMap[configuration.logLevel]))
         .subscribe((logEntry) => {
@@ -30094,7 +30094,7 @@ const registerLogEntriesSubscriber = Injectable_Injectable("registerLogEntriesSu
 
 
 
-const lensesClientFactory = Injectable_Injectable("lensesClient", [grpcHandlerFactory.token], (grpcHandler) => createTsProtoClient(LensesDefinition, grpcHandler));
+const lensesClientFactory = Injectable("lensesClient", [grpcHandlerFactory.token], (grpcHandler) => createTsProtoClient(LensesDefinition, grpcHandler));
 //# sourceMappingURL=lensesClient.js.map
 ;// ./node_modules/@snap/camera-kit/dist/lens/cameraKitLensSource.js
 
@@ -30120,7 +30120,7 @@ const defaultWatermarkLens = {
         lnsUrlBolt: "https://bolt-gcdn.sc-cdn.net/3/L6uAe5Fhyg0ZFf3RLsCVZ?bo=EhgaABoAMgF9OgEEQgYIkbHPpgZIAlASYAE%3D&uc=18",
     },
 };
-const cameraKitLensSourceFactory = Injectable_Injectable(lensSourcesFactory.token, [lensSourcesFactory.token, lensesClientFactory.token, remoteConfigurationFactory.token], (lensSources, lensesClient, remoteConfig) => [
+const cameraKitLensSourceFactory = Injectable(lensSourcesFactory.token, [lensSourcesFactory.token, lensesClientFactory.token, remoteConfigurationFactory.token], (lensSources, lensesClient, remoteConfig) => [
     {
         isGroupOwner(groupId) {
             return groupId === watermarksLensGroup;
@@ -30285,7 +30285,7 @@ function bootstrapCameraKit(configuration, provide) {
             yield assertPlatformSupported();
             const lensCore = yield telemetryContainer.provides(lensCoreFactory).get(lensCoreFactory.token);
             const container = telemetryContainer
-                .provides(Injectable_Injectable(lensCoreFactory.token, () => lensCore))
+                .provides(Injectable(lensCoreFactory.token, () => lensCore))
                 .provides(lensesClientFactory)
                 .provides(remoteApiSpecsClientFactory)
                 .provides(cameraKitLensSourceFactory)
