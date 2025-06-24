@@ -322,113 +322,121 @@ async function updateCamera(session) {
         }, 1000);
 
 
-        function replaceCanvasWithScreenshot() {
-            // Get data URL from canvas
-            const canvas = document.getElementById('canvas');
-            const dataURL = canvas.toDataURL('image/png');
-            // Create image element
-            const img = document.createElement('img');
-            img.src = dataURL;
-            img.style.height = '100%';
-            // img.style.maxHeight = '100%';
-            // img.style.maxWidth = '100%';
-            // Replace canvas with image
-            canvas.parentElement.insertBefore(img, canvas);
-            canvas.style.display = 'none';
 
-            // Show action buttons
-            document.getElementById('btn-back').style.display = 'block';
-            document.getElementById('btn-download').style.display = 'block';
-
-            // Set up download button
-            document.getElementById('btn-download').addEventListener('click', function () {
-                // Check if Web Share API is supported
-                if (isMobileDevice() || isIPad()) {
-
-                    if (navigator.share) {
-                        // Convert dataURL to a Blob
-                        fetch(dataURL)
-                            .then(res => res.blob())
-                            .then(blob => {
-                                const file = new File([blob], 'Dolce&Gabbana-VTO.png', { type: 'image/png' });
-                                navigator.share({
-                                    files: [file],
-                                    title: 'Dolce & Gabbana VTO',
-                                    text: 'Check out my Dolce & Gabbana virtual try-on!'
-                                }).catch(err => {
-                                    console.error('Error sharing:', err);
-                                    // Fallback to download
-                                    downloadImage(dataURL);
-                                });
-                            });
-                    } else {
-                        // Fallback to download
-                        const a = document.createElement('a');
-                        a.href = dataURL;
-                        a.download = 'Dolce&Gabbana-VTO.png';
-                        a.click();
-                    }
-                } else {
-                    const a = document.createElement('a');
-                    a.href = dataURL;
-                    a.download = 'Dolce&Gabbana-VTO.png';
-                    a.click();
-                }
-            });
-            // document.getElementById('btn-download').addEventListener('click', function () {
-            //     const a = document.createElement('a');
-            //     a.href = dataURL;
-            //     a.download = 'Dolce&Gabbana-VTO.png';
-            //     a.click();
-            // });
-
-            // Set up back button: revert to first state
-            document.getElementById('btn-back').addEventListener('click', function () {
-                // Remove the screenshot image if present
-                if (img.parentElement) img.parentElement.removeChild(img);
-                // Show live canvas, hide capture canvas
-                document.getElementById('live-canvas').style.display = 'block';
-                document.getElementById('canvas').style.display = 'none';
-                // Show capture button, hide action buttons
-                document.getElementById('captureButton').style.display = 'block';
-                document.getElementById('btn-back').style.display = 'none';
-                document.getElementById('btn-download').style.display = 'none';
-                // Resume live output, pause capture output
-                session.play('live');
-                session.pause('capture');
-            });
-        }
     });
 
-    function triggerFlash() {
-        const flash = document.getElementById('flash-overlay');
-        // Reset to 0 opacity and clear any animation/transition
-        flash.style.opacity = '0';
-        flash.style.transition = 'none';
 
-        // Force reflow
-        void flash.offsetWidth;
-
-        // First: fade in (0 to 1 in 0.3s linear)
-        flash.style.transition = 'opacity 0.3s linear';
-        flash.style.opacity = '1';
-
-        // After 0.3s, start fade out (1 to 0 in 3s ease-out)
-        setTimeout(() => {
-            flash.style.transition = 'opacity 3s ease-out';
-            flash.style.opacity = '0';
-            // Optional: reset transition after animation
-            setTimeout(() => {
-                flash.style.transition = 'none';
-            }, 3000);
-        }, 300);
-    }
 
 
 
 
 }
 
+
+function triggerFlash() {
+    const flash = document.getElementById('flash-overlay');
+    // Reset to 0 opacity and clear any animation/transition
+    flash.style.opacity = '0';
+    flash.style.transition = 'none';
+
+    // Force reflow
+    void flash.offsetWidth;
+
+    // First: fade in (0 to 1 in 0.3s linear)
+    flash.style.transition = 'opacity 0.3s linear';
+    flash.style.opacity = '1';
+
+    // After 0.3s, start fade out (1 to 0 in 3s ease-out)
+    setTimeout(() => {
+        flash.style.transition = 'opacity 3s ease-out';
+        flash.style.opacity = '0';
+        // Optional: reset transition after animation
+        setTimeout(() => {
+            flash.style.transition = 'none';
+        }, 3000);
+    }, 300);
+}
+
+function replaceCanvasWithScreenshot() {
+    // Get data URL from canvas
+    const canvas = document.getElementById('canvas');
+    const dataURL = canvas.toDataURL('image/png');
+    // Create image element
+    const img = document.createElement('img');
+    img.src = dataURL;
+    img.style.height = '100%';
+    // img.style.maxHeight = '100%';
+    // img.style.maxWidth = '100%';
+    // Replace canvas with image
+    canvas.parentElement.insertBefore(img, canvas);
+    canvas.style.display = 'none';
+
+    // Show action buttons
+    document.getElementById('btn-back').style.display = 'block';
+    document.getElementById('btn-download').style.display = 'block';
+
+
+    // document.getElementById('btn-download').addEventListener('click', function () {
+    //     const a = document.createElement('a');
+    //     a.href = dataURL;
+    //     a.download = 'Dolce&Gabbana-VTO.png';
+    //     a.click();
+    // });
+
+
+}
+
+// Set up download button
+document.getElementById('btn-download').addEventListener('click', function () {
+    // Check if Web Share API is supported
+    if (isMobileDevice() || isIPad()) {
+
+        if (navigator.share) {
+            // Convert dataURL to a Blob
+            fetch(dataURL)
+                .then(res => res.blob())
+                .then(blob => {
+                    const file = new File([blob], 'Dolce&Gabbana-VTO.png', { type: 'image/png' });
+                    navigator.share({
+                        files: [file],
+                        title: 'Dolce & Gabbana VTO',
+                        text: 'Check out my Dolce & Gabbana virtual try-on!'
+                    }).catch(err => {
+                        console.error('Error sharing:', err);
+                        // Fallback to download
+                        downloadImage(dataURL);
+                    });
+                });
+        } else {
+            // Fallback to download
+            const a = document.createElement('a');
+            a.href = dataURL;
+            a.download = 'Dolce&Gabbana-VTO.png';
+            a.click();
+        }
+    } else {
+        const a = document.createElement('a');
+        a.href = dataURL;
+        a.download = 'Dolce&Gabbana-VTO.png';
+        a.click();
+    }
+});
+
+// Set up back button: revert to first state
+document.getElementById('btn-back').addEventListener('click', function () {
+    // Remove the screenshot image if present
+    if (img.parentElement) img.parentElement.removeChild(img);
+    // Show live canvas, hide capture canvas
+    document.getElementById('live-canvas').style.display = 'block';
+    document.getElementById('canvas').style.display = 'none';
+    // Show capture button, hide action buttons
+    document.getElementById('captureButton').style.display = 'block';
+    document.getElementById('btn-back').style.display = 'none';
+    document.getElementById('btn-download').style.display = 'none';
+    // Resume live output, pause capture output
+    session.play('live');
+    session.pause('capture');
+});
 
 
 // init();
