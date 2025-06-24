@@ -30514,6 +30514,8 @@ const snapAPIService = {
 
             // const obj = JSON.parse(text);
             console.log("API capture signal received ");
+            capturePhoto();
+
         };
     },
 };
@@ -30755,43 +30757,7 @@ async function updateCamera(session) {
     session.pause('capture'); // Pause capture output on "canvas"
 
     document.getElementById('captureButton').addEventListener('click', function () {
-        session.play('capture');
-        session.pause('live');
-        document.getElementById('flash-overlay').style.display = 'block';
-        setTimeout(e => {
-            document.getElementById('canvas').style.display = 'block';
-            document.getElementById('live-canvas').style.display = 'none';
-            this.style.display = 'none';
-        }, 100)
-
-        const countdownEl = document.getElementById('countdown');
-        const countdownNumber = document.querySelector('.countdown-number');
-        const circle = document.querySelector('.countdown-circle circle');
-        countdownEl.style.display = 'block';
-        countdownNumber.textContent = '3';
-
-        // Start circle animation
-        circle.style.animation = 'none';
-        void circle.offsetWidth; // Force reflow
-        circle.style.animation = 'countdown 3s linear forwards';
-
-        let count = 3;
-        const intervalId = setInterval(function () {
-            count--;
-            countdownNumber.textContent = count;
-            if (count <= 0) {
-                clearInterval(intervalId);
-                countdownEl.style.display = 'none';
-
-
-                triggerFlash();
-
-                replaceCanvasWithScreenshot();
-            }
-        }, 1000);
-
-
-
+        capturePhoto(); //alsp trigger when API capture
     });
 
 
@@ -30801,6 +30767,42 @@ async function updateCamera(session) {
 
 }
 
+function capturePhoto() {
+    session.play('capture');
+    session.pause('live');
+    document.getElementById('flash-overlay').style.display = 'block';
+    setTimeout(e => {
+        document.getElementById('canvas').style.display = 'block';
+        document.getElementById('live-canvas').style.display = 'none';
+        this.style.display = 'none';
+    }, 100)
+
+    const countdownEl = document.getElementById('countdown');
+    const countdownNumber = document.querySelector('.countdown-number');
+    const circle = document.querySelector('.countdown-circle circle');
+    countdownEl.style.display = 'block';
+    countdownNumber.textContent = '3';
+
+    // Start circle animation
+    circle.style.animation = 'none';
+    void circle.offsetWidth; // Force reflow
+    circle.style.animation = 'countdown 3s linear forwards';
+
+    let count = 3;
+    const intervalId = setInterval(function () {
+        count--;
+        countdownNumber.textContent = count;
+        if (count <= 0) {
+            clearInterval(intervalId);
+            countdownEl.style.display = 'none';
+
+
+            triggerFlash();
+
+            replaceCanvasWithScreenshot();
+        }
+    }, 1000);
+}
 
 function triggerFlash() {
     const flash = document.getElementById('flash-overlay');
