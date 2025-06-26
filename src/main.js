@@ -301,7 +301,7 @@ function capturePhoto() {
     setTimeout(e => {
         document.getElementById('canvas').style.display = 'block';
         document.getElementById('live-canvas').style.display = 'none';
-        this.style.display = 'none';
+        document.getElementById('captureButton').style.display = 'none';
     }, 100)
 
     const countdownEl = document.getElementById('countdown');

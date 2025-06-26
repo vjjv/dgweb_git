@@ -179,8 +179,8 @@ body {
   color: #FFFFFF;
   cursor: pointer;
   display: inline-block;
-  font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-weight: 500;
+  font-family: 'FuturaLTProMedium', sans-serif;
+  /* font-weight: 500; */
   line-height: 2.5vh;
   list-style: none;
   margin: 0;
@@ -197,9 +197,9 @@ body {
   /* margin: 10px; */
   z-index: 22;
   margin: 0.5vh 1vh;
-  height: 5vh;
-  font-size: 2.5vh;
-  width: 90%;
+  height: 6vh;
+  font-size: 2vh;
+  width: 80%;
 }
 
 .button-1:hover,
@@ -236,15 +236,21 @@ body {
 }
 
 #btn-cross {
-  margin-left: 2rem;
-  margin-top: 2rem;
+/* margin-left: 2rem; */
+  /* margin-top: 0.5rem; */
+  display: block;
+  cursor: pointer;
+  margin: 4vh 0 0 4vh;
+  pointer-events: auto;
+  cursor: pointer;
+  position: absolute;
 }
 
-#btn-back {
+#btn-back{
   /* margin-left: 2rem; */
   /* margin-top: 0.5rem; */
   cursor: pointer;
-  margin: 4vh 0 0 1vh;
+  margin: 11vh 0 0 4vh;
   pointer-events: auto;
   cursor: pointer;
   position: absolute;
@@ -275,16 +281,16 @@ body {
 
 #intro-logo {
   /* width: 30vh; */
-  height: 22vh;
+  height: 18vh;
 }
 
 #intro-spacer {
-  height: 15vh;
+  height: 27vh;
 }
 
 @media (max-width: 767px) {
   #intro-spacer {
-    height: 5vh;
+    height: 27vh;
   }
 }
 
@@ -295,22 +301,22 @@ body {
 }
 
 #intro-text-1 {
-  font-size: 2.8vh;
+  font-size: 2.2vh;
 }
 
 #intro-text-2 {
-  font-size: 2.4vh;
+  font-size: 1.95vh;
 }
 
 #intro-text-3 {
-  font-size: 1.5vh;
-  margin: 1vh 0;
+  font-size: 1.95vh;
+  margin: 2.5vh 0;
 }
 
 #ui-countdown {
   /* z-index: 1; */
   position: absolute;
-  font-size: 10rem;
+  font-size: 2vh;
   font-family: 'FuturaLTProMedium', sans-serif;
   height: 100%;
   width: 100%;
@@ -323,7 +329,7 @@ body {
   margin: 10px auto;
   display: none;
   /* Hidden by default */
-  transform: scale(7.5) translateY(-10%);
+  transform: scale(6.5) translateY(-10%);
   top: 50vh;
   z-index: 100;
   /* Enlarge the whole countdown */
@@ -344,7 +350,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 1.1vh;
   color: white;
   z-index: 10;
 }
@@ -360,14 +366,14 @@ body {
 .countdown-circle .static-circle {
   fill: none;
   stroke: #fff;
-  stroke-width: 0.5px;
+  stroke-width: 0.3px;
   /* inverted idk why */
 }
 
 .countdown-circle circle {
   fill: none;
   stroke: #fff;
-  stroke-width: 0.2px;
+  stroke-width: 0.1px;
   stroke-dasharray: 113px;
   stroke-dashoffset: 0px;
   z-index: 10;
