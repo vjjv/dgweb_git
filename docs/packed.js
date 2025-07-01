@@ -2246,44 +2246,44 @@ function ensureClonedRequest(input) {
 const createRetryingHandler = (options = {}) => {
     const definedOptions = copyDefinedProperties(options);
     const { backoffMultiple, baseSleep, maxSleep, maxRetries, retryPredicate } = Object.assign(Object.assign({}, defaultOptions), definedOptions);
-    let retryCount = -1;
     const jitterSleep = (priorSleep) => tslib_es6_awaiter(void 0, void 0, void 0, function* () {
         const nextSleep = Math.min(maxSleep, randomInRange(baseSleep, priorSleep * backoffMultiple));
         yield sleep(nextSleep);
         return nextSleep;
     });
-    const makeRequestAttempt = (next, priorSleep = baseSleep) => (req, metadata) => tslib_es6_awaiter(void 0, void 0, void 0, function* () {
-        var _a, _b;
-        retryCount++;
-        try {
-            const response = yield next(ensureClonedRequest(req), metadata);
-            if (retryCount < maxRetries && retryPredicate(response, retryCount)) {
-                const nextSleep = yield jitterSleep(priorSleep);
-                if ((_a = metadata === null || metadata === void 0 ? void 0 : metadata.signal) === null || _a === void 0 ? void 0 : _a.aborted)
-                    return response;
-                logRetry(response, nextSleep);
-                return makeRequestAttempt(next, nextSleep)(req, metadata);
+    return (next) => (req, metadata) => {
+        const attemptFn = (priorSleep, retryCount) => (() => tslib_es6_awaiter(void 0, void 0, void 0, function* () {
+            var _a, _b;
+            try {
+                const response = yield next(ensureClonedRequest(req), metadata);
+                if (retryCount < maxRetries && retryPredicate(response, retryCount)) {
+                    const nextSleep = yield jitterSleep(priorSleep);
+                    if ((_a = metadata === null || metadata === void 0 ? void 0 : metadata.signal) === null || _a === void 0 ? void 0 : _a.aborted)
+                        return response;
+                    logRetry(response, nextSleep);
+                    return attemptFn(nextSleep, retryCount + 1);
+                }
+                return response;
             }
-            return response;
-        }
-        catch (error) {
-            if (!(error instanceof Error)) {
-                throw new Error("Invalid type caught by retrying handler. Handlers may only throw Errors. Got " +
-                    `${JSON.stringify(error)}`);
-            }
-            if (error.name === "AbortError")
-                throw error;
-            if (retryCount < maxRetries && retryPredicate(error, retryCount)) {
-                const nextSleep = yield jitterSleep(priorSleep);
-                if ((_b = metadata === null || metadata === void 0 ? void 0 : metadata.signal) === null || _b === void 0 ? void 0 : _b.aborted)
+            catch (error) {
+                if (!(error instanceof Error)) {
+                    throw new Error("Invalid type caught by retrying handler. Handlers may only throw Errors. Got " +
+                        `${JSON.stringify(error)}`);
+                }
+                if (error.name === "AbortError")
                     throw error;
-                logRetry(error, nextSleep);
-                return makeRequestAttempt(next, nextSleep)(req, metadata);
+                if (retryCount < maxRetries && retryPredicate(error, retryCount)) {
+                    const nextSleep = yield jitterSleep(priorSleep);
+                    if ((_b = metadata === null || metadata === void 0 ? void 0 : metadata.signal) === null || _b === void 0 ? void 0 : _b.aborted)
+                        throw error;
+                    logRetry(error, nextSleep);
+                    return attemptFn(nextSleep, retryCount + 1);
+                }
+                throw error;
             }
-            throw error;
-        }
-    });
-    return (next) => makeRequestAttempt(next);
+        }))();
+        return attemptFn(baseSleep, 0);
+    };
 };
 //# sourceMappingURL=retryingHandler.js.map
 ;// ./node_modules/@snap/camera-kit/dist/handlers/noCorsRetryingFetchHandler.js
@@ -7193,13 +7193,13 @@ function memoize_memoize(delegate) {
 }
 //# sourceMappingURL=memoize.js.map
 ;// ./node_modules/@snap/camera-kit/dist/environment.js
-/* harmony default export */ const environment = ({ PACKAGE_VERSION: "1.6.1" });
+/* harmony default export */ const environment = ({ PACKAGE_VERSION: "1.7.0" });
 //# sourceMappingURL=environment.js.map
 ;// ./node_modules/@snap/camera-kit/dist/lensCoreWasmVersions.js
 /* harmony default export */ const lensCoreWasmVersions = ({
-    version: "313",
-    buildNumber: "629",
-    baseUrl: "https://cf-st.sc-cdn.net/d/0HAchv75u9EAJsMvZsIut?go=IgsKCTIBBEgBUFxgAQ%3D%3D&uc=92",
+    version: "317",
+    buildNumber: "643",
+    baseUrl: "https://cf-st.sc-cdn.net/d/Yvu049YiKFpFeus5hPpXM?go=IgsKCTIBBEgBUFxgAQ%3D%3D&uc=92",
 });
 //# sourceMappingURL=lensCoreWasmVersions.js.map
 ;// ./node_modules/@snap/camera-kit/dist/platform/platformInfo.js
