@@ -30493,6 +30493,8 @@ const capture_button = document.getElementById('captureButton');
 const ui_capture = document.getElementById('ui-capture');
 const btn_agree = document.getElementById('btn-agree');
 const btn_cancel = document.getElementById('btn-cancel');
+const btn_cross = document.getElementById('btn-cross');
+const btn_back = document.getElementById('btn-back');
 var firstTime = true;
 let session;
 
@@ -30514,7 +30516,8 @@ const snapAPIService = {
             });
 
             // const obj = JSON.parse(text);
-            console.log("API capture signal received ");
+            console.log('postMessage : photo');
+            window.parent.postMessage({ action: 'photo' }, '*');
             capturePhoto();
 
         };
@@ -30534,13 +30537,13 @@ if (window.splashScreen) {
             capture_button.style.opacity = 1;
             ui_capture.style.display = 'block';
             console.log('postMessage : startLoading');
-            window.parent?.postMessage({ action: 'startLoading' });
+            window.parent?.postMessage({ action: 'startLoading' }, '*');
             init();
         }
     }, true);
     btn_cancel.addEventListener('click', () => {
         console.log('postMessage : close');
-        window.parent?.postMessage({ action: 'close' });
+        window.parent?.postMessage({ action: 'close' }, '*');
     })
 
 } else {
@@ -30550,6 +30553,14 @@ if (window.splashScreen) {
     ui_capture.style.display = 'block';
     init();
 }
+btn_cross.addEventListener('click', () => {
+    console.log('postMessage : close');
+    window.parent?.postMessage({ action: 'close' }, '*');
+})
+btn_back.addEventListener('click', () => {
+    console.log('postMessage : back');
+    window.parent?.postMessage({ action: 'back' }, '*');
+})
 
 let isBackFacing = !window.modeStartFaceCamera;
 let mediaStream;
@@ -30727,7 +30738,7 @@ async function updateCamera(session) {
     await session.setSource(source);
 
     console.log('postMessage : endLoading');
-    window.parent?.postMessage({ action: 'endLoading' });
+    window.parent?.postMessage({ action: 'endLoading' }, '*');
 
 
     //DEBUG PIXELATE
