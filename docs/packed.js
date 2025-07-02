@@ -30889,17 +30889,26 @@ function replaceCanvasWithScreenshot() {
                         });
                     });
             } else {
+                //PostMessage
+                console.log('postMessage : vto-screenshot');
+                console.log(dataURL);
+                window.parent.postMessage({ action: 'vto-screenshot', dataURL : dataURL }, '*');
                 // Fallback to download
-                const a = document.createElement('a');
-                a.href = dataURL;
-                a.download = 'Dolce&Gabbana-VTO.png';
-                a.click();
+                // const a = document.createElement('a');
+                // a.href = dataURL;
+                // a.download = 'Dolce&Gabbana-VTO.png';
+                // a.click();
             }
         } else {
-            const a = document.createElement('a');
-            a.href = dataURL;
-            a.download = 'Dolce&Gabbana-VTO.png';
-            a.click();
+            //PostMessage
+            console.log('postMessage : vto-screenshot');
+            console.log(dataURL);
+            window.parent.postMessage({ action: 'vto-screenshot', dataURL : dataURL }, '*');
+            // Fallback to download
+            // const a = document.createElement('a');
+            // a.href = dataURL;
+            // a.download = 'Dolce&Gabbana-VTO.png';
+            // a.click();
         }
     });
 
