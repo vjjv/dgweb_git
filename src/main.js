@@ -417,7 +417,6 @@ function replaceCanvasWithScreenshot() {
             } else {
                 //PostMessage
                 console.log('postMessage : vto-screenshot');
-                console.log(dataURL);
                 window.parent.postMessage({ action: 'vto-screenshot', dataURL : dataURL }, '*');
                 // Fallback to download
                 // const a = document.createElement('a');
@@ -428,7 +427,6 @@ function replaceCanvasWithScreenshot() {
         } else {
             //PostMessage
             console.log('postMessage : vto-screenshot');
-            console.log(dataURL);
             window.parent.postMessage({ action: 'vto-screenshot', dataURL : dataURL }, '*');
             // Fallback to download
             // const a = document.createElement('a');
