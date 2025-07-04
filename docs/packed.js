@@ -30495,6 +30495,7 @@ const btn_agree = document.getElementById('btn-agree');
 const btn_cancel = document.getElementById('btn-cancel');
 const btn_cross = document.getElementById('btn-cross');
 const btn_back = document.getElementById('btn-back');
+let dataUrls = [];
 var firstTime = true;
 let session;
 
@@ -30503,6 +30504,13 @@ const snapAPIService = {
     apiSpecId: "298de64a-14ae-4bb9-a385-8d83a4ba1848",
     getRequestHandler(request) {
         if (request.endpointId !== "capture") return;
+        console.log('REMOTE API :' + request.parameters.action);
+
+        console.log('postMessage : ' + request.parameters.action);
+        window.parent.postMessage({ action: request.parameters.action }, '*');
+        if (request.parameters.action == 'screenshot') capturePhoto();
+        if (request.parameters.action == 'retake') capturePhoto();
+        if (request.parameters.action == 'print') printPhoto();
 
         return async (reply) => {
             //do external fetch request here if needed
@@ -30516,9 +30524,7 @@ const snapAPIService = {
             });
 
             // const obj = JSON.parse(text);
-            console.log('postMessage : photo');
-            window.parent.postMessage({ action: 'photo' }, '*');
-            capturePhoto();
+            // window.parent.postMessage({ action: 'photo' }, '*');
 
         };
     },
@@ -30780,23 +30786,56 @@ async function updateCamera(session) {
 }
 
 async function capturePhoto() {
-    clickCanvasCapture();
-    document.getElementById('captureButton').style.display = 'none';
-    await startCountdown();
-    console.log('resolved')
+    console.log('capturePhoto()');
 
-    session.play('capture');
-    session.pause('live');
-    document.getElementById('flash-overlay').style.display = 'block';
-    document.getElementById('canvas').style.display = 'block';
-    document.getElementById('live-canvas').style.display = 'none';
-    
-    setTimeout(e => {
-        replaceCanvasWithScreenshot();
-    }, 100)
+    hidePreviousPhotos();
 
+    //AR MIRROR
+    if (window.isArMirror) {
+        // clickCanvasCapture();
+        document.getElementById('captureButton').style.display = 'none';
+        await startCountdown();
 
+        session.play('capture');
+        // session.pause('live');
+        document.getElementById('flash-overlay').style.display = 'block';
+        // document.getElementById('canvas').style.display = 'block';
+        // document.getElementById('live-canvas').style.display = 'none';
 
+        setTimeout(e => {
+            replaceCanvasWithScreenshot();
+        }, 200)
+
+    }
+    //WEB
+    else {
+        clickCanvasCapture();
+        document.getElementById('captureButton').style.display = 'none';
+        await startCountdown();
+
+        session.play('capture');
+        session.pause('live');
+        document.getElementById('flash-overlay').style.display = 'block';
+        document.getElementById('canvas').style.display = 'block';
+        document.getElementById('live-canvas').style.display = 'none';
+
+        setTimeout(e => {
+            replaceCanvasWithScreenshot();
+        }, 200)
+
+    }
+}
+
+function printPhoto() {
+    console.log('printPhoto()');
+    downloadPhoto();
+}
+
+function hidePreviousPhotos() {
+    let photoToHide = document.getElementsByClassName('dataUrlToSend');
+    for (let i = 0; i < photoToHide.length; i++) {
+        photoToHide[i].style.display = 'none';
+    }
 }
 
 function startCountdown() {
@@ -30853,23 +30892,37 @@ function triggerFlash() {
     }, 300);
 }
 
+document.getElementById('btn-cross').style.display = window.isArMirror ? 'none' : 'block';
+
 function replaceCanvasWithScreenshot() {
     // Get data URL from canvas
     const canvas = document.getElementById('canvas');
     const dataURL = canvas.toDataURL('image/png');
+    dataUrls.push(dataURL);
     // Create image element
     const img = document.createElement('img');
-    img.src = dataURL;
-    img.style.height = '100%';
-    // img.style.maxHeight = '100%';
-    // img.style.maxWidth = '100%';
+    img.classList.add('dataUrlToSend');
+    img.src = dataUrls[dataUrls.length - 1];//dataURL;
+
+    if (window.isArMirror) {
+        img.style.height = '75%';
+        img.style.margin = '7% auto';
+        img.style.position = 'absolute';
+        img.style.zIndex = '11';
+        img.style.transform = 'translateX(-50%)';
+        img.style.left = '50%';
+
+    } else {
+        img.style.height = '100%';
+    }
+
     // Replace canvas with image
     canvas.parentElement.insertBefore(img, canvas);
     canvas.style.display = 'none';
 
     // Show action buttons
-    document.getElementById('btn-back').style.display = 'block';
-    document.getElementById('btn-download').style.display = 'block';
+    document.getElementById('btn-back').style.display = window.isArMirror ? 'none' : 'block';
+    document.getElementById('btn-download').style.display = window.isArMirror ? 'none' : 'block';
 
 
     // document.getElementById('btn-download').addEventListener('click', function () {
@@ -30882,63 +30935,92 @@ function replaceCanvasWithScreenshot() {
 
     // Set up download button
     document.getElementById('btn-download').addEventListener('click', function () {
-        // Check if Web Share API is supported
-        if (isMobileDevice() || isIPad()) {
-
-            if (navigator.share) {
-                // Convert dataURL to a Blob
-                fetch(dataURL)
-                    .then(res => res.blob())
-                    .then(blob => {
-                        const file = new File([blob], 'Dolce&Gabbana-VTO.png', { type: 'image/png' });
-                        navigator.share({
-                            files: [file],
-                            title: 'Dolce & Gabbana VTO',
-                            text: 'Check out my Dolce & Gabbana virtual try-on!'
-                        }).catch(err => {
-                            console.error('Error sharing:', err);
-                            // Fallback to download
-                            downloadImage(dataURL);
-                        });
-                    });
-            } else {
-                //PostMessage
-                console.log('postMessage : vto-screenshot');
-                window.parent.postMessage({ action: 'vto-screenshot', dataURL: dataURL }, '*');
-                // Fallback to download
-                // const a = document.createElement('a');
-                // a.href = dataURL;
-                // a.download = 'Dolce&Gabbana-VTO.png';
-                // a.click();
-            }
-        } else {
-            //PostMessage
-            console.log('postMessage : vto-screenshot');
-            window.parent.postMessage({ action: 'vto-screenshot', dataURL: dataURL }, '*');
-            // Fallback to download
-            // const a = document.createElement('a');
-            // a.href = dataURL;
-            // a.download = 'Dolce&Gabbana-VTO.png';
-            // a.click();
-        }
+        downloadPhoto();
     });
+
+
 
     // Set up back button: revert to first state
     document.getElementById('btn-back').addEventListener('click', function () {
-        // Remove the screenshot image if present
-        if (img.parentElement) img.parentElement.removeChild(img);
-        // Show live canvas, hide capture canvas
-        document.getElementById('live-canvas').style.display = 'block';
-        document.getElementById('canvas').style.display = 'none';
-        // Show capture button, hide action buttons
-        document.getElementById('captureButton').style.display = 'block';
-        document.getElementById('btn-back').style.display = 'none';
-        document.getElementById('btn-download').style.display = 'none';
-        // Resume live output, pause capture output
-        session.play('live');
-        session.pause('capture');
+        backButton();
     });
+}
 
+function backButton() {
+    // Remove the screenshot image if present
+    if (img.parentElement) img.parentElement.removeChild(img);
+    // Show live canvas, hide capture canvas
+    document.getElementById('live-canvas').style.display = 'block';
+    document.getElementById('canvas').style.display = 'none';
+    // Show capture button, hide action buttons
+    document.getElementById('captureButton').style.display = 'block';
+    document.getElementById('btn-back').style.display = 'none';
+    document.getElementById('btn-download').style.display = 'none';
+    // Resume live output, pause capture output
+    session.play('live');
+    session.pause('capture');
+}
+
+function downloadPhoto() {
+    if (isMobileDevice() || isIPad()) {
+
+        if (navigator.share) {
+            // Convert dataURL to a Blob
+            fetch(dataURLs[dataUrls.length - 1])
+                .then(res => res.blob())
+                .then(blob => {
+                    const file = new File([blob], 'Dolce&Gabbana-VTO.png', { type: 'image/png' });
+                    navigator.share({
+                        files: [file],
+                        title: 'Dolce & Gabbana VTO',
+                        text: 'Check out my Dolce & Gabbana virtual try-on!'
+                    }).catch(err => {
+                        console.error('Error sharing:', err);
+                        // Fallback to download
+                        downloadImage(dataURLs[dataUrls.length - 1]);
+                    });
+                });
+        } else {
+            //PostMessage
+            console.log('postMessage : vto-screenshot?');
+            window.parent.postMessage({ action: 'vto-screenshot', dataURLs: getAllDataUrlToSend() }, '*');
+        }
+    } else {
+        //PostMessage
+        console.log('postMessage : vto-screenshot');
+        let dataUrlToSend = getAllDataUrlToSend();
+        console.log('Sending DataURLs : ' + dataUrlToSend.length);
+        
+        window.parent.postMessage({ action: 'vto-screenshot', dataURLs: dataUrlToSend }, '*');
+        // Fallback to download
+        // const a = document.createElement('a');
+        // a.href = dataURL;
+        // a.download = 'Dolce&Gabbana-VTO.png';
+        // a.click();
+    }
+    removeDataUrlToSend();
+}
+
+function getAllDataUrlToSend() {
+    // Get all elements with the class 'dataUrlToSend'
+    const images = document.getElementsByClassName('dataUrlToSend');
+
+    // Loop through the HTMLCollection and get the src attribute of each image
+    const dataURLToSend = [];
+    for (let i = 0; i < images.length; i++) {
+        // Check if the element is an <img>
+        if (images[i].tagName === 'IMG') {
+            dataURLToSend.push(images[i].src);
+        }
+    }
+
+    // dataURLs now contains all the src values (data URLs) of the images
+    return dataURLToSend;
+}
+function removeDataUrlToSend() {
+    const images = document.getElementsByClassName('dataUrlToSend');
+    Array.from(images).forEach(img => img.remove());
+    dataUrls = [];
 }
 
 function clickCanvasCapture(relX = 0.5, relY = 0.93) {
