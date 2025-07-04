@@ -468,24 +468,21 @@ function replaceCanvasWithScreenshot() {
 
     // Set up back button: revert to first state
     document.getElementById('btn-back').addEventListener('click', function () {
-        backButton();
+        // Remove the screenshot image if present
+        if (img.parentElement) img.parentElement.removeChild(img);
+        // Show live canvas, hide capture canvas
+        document.getElementById('live-canvas').style.display = 'block';
+        document.getElementById('canvas').style.display = 'none';
+        // Show capture button, hide action buttons
+        document.getElementById('captureButton').style.display = 'block';
+        document.getElementById('btn-back').style.display = 'none';
+        document.getElementById('btn-download').style.display = 'none';
+        // Resume live output, pause capture output
+        session.play('live');
+        session.pause('capture');
     });
 }
 
-function backButton() {
-    // Remove the screenshot image if present
-    if (img.parentElement) img.parentElement.removeChild(img);
-    // Show live canvas, hide capture canvas
-    document.getElementById('live-canvas').style.display = 'block';
-    document.getElementById('canvas').style.display = 'none';
-    // Show capture button, hide action buttons
-    document.getElementById('captureButton').style.display = 'block';
-    document.getElementById('btn-back').style.display = 'none';
-    document.getElementById('btn-download').style.display = 'none';
-    // Resume live output, pause capture output
-    session.play('live');
-    session.pause('capture');
-}
 
 function downloadPhoto() {
     if (isMobileDevice() || isIPad()) {
@@ -516,7 +513,7 @@ function downloadPhoto() {
         console.log('postMessage : vto-screenshot');
         let dataUrlToSend = getAllDataUrlToSend();
         console.log('Sending DataURLs : ' + dataUrlToSend.length);
-        
+
         window.parent.postMessage({ action: 'vto-screenshot', dataURLs: dataUrlToSend }, '*');
         // Fallback to download
         // const a = document.createElement('a');
