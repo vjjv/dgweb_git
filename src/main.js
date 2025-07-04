@@ -305,41 +305,54 @@ async function updateCamera(session) {
 
 }
 
-function capturePhoto() {
+async function capturePhoto() {
+    clickCanvasCapture();
+    document.getElementById('captureButton').style.display = 'none';
+    await startCountdown();
+    console.log('resolved')
+
     session.play('capture');
     session.pause('live');
     document.getElementById('flash-overlay').style.display = 'block';
+    document.getElementById('canvas').style.display = 'block';
+    document.getElementById('live-canvas').style.display = 'none';
+    
     setTimeout(e => {
-        document.getElementById('canvas').style.display = 'block';
-        document.getElementById('live-canvas').style.display = 'none';
-        document.getElementById('captureButton').style.display = 'none';
+        replaceCanvasWithScreenshot();
     }, 100)
 
-    const countdownEl = document.getElementById('countdown');
-    const countdownNumber = document.querySelector('.countdown-number');
-    const circle = document.querySelector('.countdown-circle circle');
-    countdownEl.style.display = 'block';
-    countdownNumber.textContent = '3';
-
-    // Start circle animation
-    circle.style.animation = 'none';
-    void circle.offsetWidth; // Force reflow
-    circle.style.animation = 'countdown 3s linear forwards';
-
-    let count = 3;
-    const intervalId = setInterval(function () {
-        count--;
-        countdownNumber.textContent = count;
-        if (count <= 0) {
-            clearInterval(intervalId);
-            countdownEl.style.display = 'none';
 
 
-            triggerFlash();
+}
 
-            replaceCanvasWithScreenshot();
-        }
-    }, 1000);
+function startCountdown() {
+    return new Promise(resolve => {
+        const countdownEl = document.getElementById('countdown');
+        const countdownNumber = document.querySelector('.countdown-number');
+        const circle = document.querySelector('.countdown-circle circle');
+        countdownEl.style.display = 'block';
+        countdownNumber.textContent = '3';
+
+        // Start circle animation
+        circle.style.animation = 'none';
+        void circle.offsetWidth; // Force reflow
+        circle.style.animation = 'countdown 3s linear forwards';
+
+        let count = 3;
+        const intervalId = setInterval(function () {
+            count--;
+            countdownNumber.textContent = count;
+            if (count <= 0) {
+                clearInterval(intervalId);
+                countdownEl.style.display = 'none';
+
+
+                triggerFlash();
+
+                resolve();
+            }
+        }, 1000);
+    })
 }
 
 function triggerFlash() {
@@ -417,7 +430,7 @@ function replaceCanvasWithScreenshot() {
             } else {
                 //PostMessage
                 console.log('postMessage : vto-screenshot');
-                window.parent.postMessage({ action: 'vto-screenshot', dataURL : dataURL }, '*');
+                window.parent.postMessage({ action: 'vto-screenshot', dataURL: dataURL }, '*');
                 // Fallback to download
                 // const a = document.createElement('a');
                 // a.href = dataURL;
@@ -427,7 +440,7 @@ function replaceCanvasWithScreenshot() {
         } else {
             //PostMessage
             console.log('postMessage : vto-screenshot');
-            window.parent.postMessage({ action: 'vto-screenshot', dataURL : dataURL }, '*');
+            window.parent.postMessage({ action: 'vto-screenshot', dataURL: dataURL }, '*');
             // Fallback to download
             // const a = document.createElement('a');
             // a.href = dataURL;
@@ -453,6 +466,28 @@ function replaceCanvasWithScreenshot() {
     });
 
 }
+
+function clickCanvasCapture(relX = 0.5, relY = 0.93) {
+    const canvas = document.getElementById('live-canvas');
+    if (!canvas) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const x = rect.left + relX * rect.width;
+    const y = rect.top + relY * rect.height;
+
+    ['mouseover', 'mouseenter', 'mousedown', 'mouseup', 'click'].forEach(eventType => {
+        const event = new MouseEvent(eventType, {
+            bubbles: true,
+            cancelable: true,
+            clientX: x,
+            clientY: y,
+            view: window
+        });
+        canvas.dispatchEvent(event);
+    });
+}
+// Usage:
+// clickCanvasCapture(); // Clicks at (0.5, 0.93) relative position
 
 
 

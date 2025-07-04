@@ -27,6 +27,7 @@ window.modePhoto = getURLorFallback('modePhoto', true);
 window.modeVideo = getURLorFallback('modeVideo', false);
 window.modeBothCamera = getURLorFallback('modeBothCamera', false);
 window.modeStartFaceCamera = getURLorFallback('modeStartFaceCamera', true);
+window.isArMirror = getURLorFallback('isArMirror', false); //change to undefined to skip intro or '0' for d&g project
 window.splashScreen = getURLorFallback('splashScreen', '0'); //change to undefined to skip intro or '0' for d&g project
 
 
@@ -36,6 +37,8 @@ console.log('modePhoto : ' + window.modePhoto);
 console.log('modeVideo : ' + window.modeVideo);
 console.log('modeBothCamera : ' + window.modeBothCamera);
 console.log('modeStartFaceCamera : ' + window.modeStartFaceCamera);
+console.log('isArMirror : ' + window.isArMirror);
+
 document.getElementById('captureButton').style.display = !window.modePhoto && !window.modeVideo ? "none" : "flex";
 
 console.log('splashScreen : ' + window.splashScreen);
