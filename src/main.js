@@ -521,7 +521,7 @@ function downloadPhoto() {
         // a.download = 'Dolce&Gabbana-VTO.png';
         // a.click();
     }
-    removeDataUrlToSend();
+    setTimeout(e => removeDataUrlToSend(), 15000) ;
 }
 
 function getAllDataUrlToSend() {
