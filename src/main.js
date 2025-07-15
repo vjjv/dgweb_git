@@ -277,7 +277,8 @@ async function updateCamera(session) {
     const resolutionMultiplier = window.devicePixelRatio;
     // const width = window.innerWidth * resolutionMultiplier;
     // const height = window.innerHeight * resolutionMultiplier;
-    let multiplier = (resolutionMultiplier > 1) ? 2 : 1;
+    // let multiplier = (resolutionMultiplier > 1) ? 2 : 1;
+    let multiplier = resolutionMultiplier ;
     const width = document.getElementById('container-9-16').clientWidth * multiplier;
     const height = document.getElementById('container-9-16').clientHeight * multiplier;
     source.setRenderSize(width, height);
