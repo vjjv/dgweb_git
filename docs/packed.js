@@ -30511,6 +30511,7 @@ const snapAPIService = {
         if (request.parameters.action == 'screenshot') capturePhoto();
         if (request.parameters.action == 'retake') capturePhoto();
         if (request.parameters.action == 'print') printPhoto();
+        if (request.parameters.action == 'back') back();
 
         return async (reply) => {
             //do external fetch request here if needed
@@ -30530,7 +30531,9 @@ const snapAPIService = {
     },
 };
 
-
+function back(){
+    removeDataUrlToSend() ;
+}
 
 console.log('splashScren : ' + window.splashScreen);
 if (window.splashScreen) {
@@ -30913,7 +30916,7 @@ function replaceCanvasWithScreenshot() {
         img.style.transform = 'translateX(-50%)';
         img.style.left = '50%';
         img.style.top = '9%';
-        img.style.borderRadius = '6%';
+        img.style.borderRadius = '5px';
 
     } else {
         img.style.height = '100%';
