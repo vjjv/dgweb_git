@@ -162,6 +162,12 @@ body {
   position: relative;
 }
 
+@media (max-width: 767px) {
+  #container-9-16 {
+    width: 100vw;
+  }
+}
+
 
 #intro-card img {
   /* width: 100%; */
