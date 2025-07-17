@@ -30806,6 +30806,7 @@ async function capturePhoto() {
         // document.getElementById('canvas').style.display = 'block';
         // document.getElementById('live-canvas').style.display = 'none';
 
+        removeDataUrlToSend();
         setTimeout(e => {
             replaceCanvasWithScreenshot();
         }, 200)
