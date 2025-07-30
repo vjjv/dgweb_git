@@ -382,7 +382,7 @@ function startCountdown() {
         void circle.offsetWidth; // Force reflow
         circle.style.animation = 'countdown 3s linear forwards';
 
-        let count = 3;
+        let count = 5;
         const intervalId = setInterval(function () {
             count--;
             countdownNumber.textContent = count;
@@ -520,6 +520,8 @@ function downloadPhoto() {
         console.log('postMessage : vto-screenshot');
         let dataUrlToSend = getAllDataUrlToSend();
         console.log('Sending DataURLs : ' + dataUrlToSend.length);
+        console.log('dataURLs : ' + dataUrlToSend);
+        console.log('dataURLs[0] : ' + dataUrlToSend[0]);
 
         window.parent.postMessage({ action: 'vto-screenshot', dataURLs: dataUrlToSend }, '*');
         // Fallback to download
@@ -528,7 +530,7 @@ function downloadPhoto() {
         // a.download = 'Dolce&Gabbana-VTO.png';
         // a.click();
     }
-    setTimeout(e => removeDataUrlToSend(), 15000) ;
+    setTimeout(e => removeDataUrlToSend(), 20000) ;
 }
 
 function getAllDataUrlToSend() {
