@@ -57,8 +57,8 @@ const snapAPIService = {
     },
 };
 
-function back(){
-    removeDataUrlToSend() ;
+function back() {
+    removeDataUrlToSend();
 }
 
 console.log('splashScren : ' + window.splashScreen);
@@ -281,7 +281,7 @@ async function updateCamera(session) {
     // const width = window.innerWidth * resolutionMultiplier;
     // const height = window.innerHeight * resolutionMultiplier;
     // let multiplier = (resolutionMultiplier > 1) ? 2 : 1;
-    let multiplier = resolutionMultiplier ;
+    let multiplier = resolutionMultiplier;
     const width = document.getElementById('container-9-16').clientWidth * multiplier;
     const height = document.getElementById('container-9-16').clientHeight * multiplier;
     source.setRenderSize(width, height);
@@ -375,12 +375,12 @@ function startCountdown() {
         const countdownNumber = document.querySelector('.countdown-number');
         const circle = document.querySelector('.countdown-circle circle');
         countdownEl.style.display = 'block';
-        countdownNumber.textContent = '3';
+        countdownNumber.textContent = '5';
 
         // Start circle animation
         circle.style.animation = 'none';
         void circle.offsetWidth; // Force reflow
-        circle.style.animation = 'countdown 3s linear forwards';
+        circle.style.animation = 'countdown 5s linear forwards';
 
         let count = 5;
         const intervalId = setInterval(function () {
@@ -425,6 +425,7 @@ function triggerFlash() {
 
 document.getElementById('btn-cross').style.display = window.isArMirror ? 'none' : 'block';
 
+let alreadyListening = false;
 function replaceCanvasWithScreenshot() {
     // Get data URL from canvas
     const canvas = document.getElementById('canvas');
@@ -467,9 +468,12 @@ function replaceCanvasWithScreenshot() {
 
 
     // Set up download button
-    document.getElementById('btn-download').addEventListener('click', function () {
-        downloadPhoto();
-    });
+    if (!alreadyListening) {
+        alreadyListening = true;
+        document.getElementById('btn-download').addEventListener('click', function () {
+            downloadPhoto();
+        });
+    }
 
 
 
@@ -530,7 +534,7 @@ function downloadPhoto() {
         // a.download = 'Dolce&Gabbana-VTO.png';
         // a.click();
     }
-    setTimeout(e => removeDataUrlToSend(), 15000) ;
+    setTimeout(e => removeDataUrlToSend(), 15000);
 }
 
 function getAllDataUrlToSend() {
