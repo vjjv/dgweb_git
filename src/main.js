@@ -500,7 +500,10 @@ function downloadPhoto() {
 
         if (navigator.share) {
             // Convert dataURL to a Blob
-            fetch(dataURLs[dataUrls.length - 1])
+            // fetch(dataURLs[dataUrls.length - 1])
+            console.log('navigator.share');
+            let dataURLtoShare = getAllDataUrlToSend();
+            fetch(dataURLtoShare)
                 .then(res => res.blob())
                 .then(blob => {
                     const file = new File([blob], 'Dolce&Gabbana-VTO.png', { type: 'image/png' });
@@ -511,7 +514,7 @@ function downloadPhoto() {
                     }).catch(err => {
                         console.error('Error sharing:', err);
                         // Fallback to download
-                        downloadImage(dataURLs[dataUrls.length - 1]);
+                        downloadImage(dataURLtoShare);
                     });
                 });
         } else {
