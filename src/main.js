@@ -437,14 +437,15 @@ function replaceCanvasWithScreenshot() {
     img.src = dataUrls[dataUrls.length - 1];//dataURL;
 
     if (window.isArMirror) {
-        img.style.height = '73%';
+        img.style.height = '63%';
         img.style.margin = '7% auto';
         img.style.position = 'absolute';
         img.style.zIndex = '11';
         img.style.transform = 'translateX(-50%)';
         img.style.left = '50%';
-        img.style.top = '9%';
-        img.style.borderRadius = '5px';
+        img.style.top = '14%';
+        img.style.backgroundColor = '#fff';
+        img.style.padding = '0 5.8%';
 
     } else {
         img.style.height = '100%';
