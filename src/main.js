@@ -24,6 +24,7 @@ const btn_back = document.getElementById('btn-back');
 let dataUrls = [];
 var firstTime = true;
 let session;
+let canClickCanvas = true;
 
 
 const snapAPIService = {
@@ -174,6 +175,8 @@ console.log('isIPad : ' + isIPad());
 
 
 async function updateCamera(session) {
+    console.log('updateCamera(session)');
+
 
     // flipCamera.innerText = isBackFacing
     // ? 'Switch to Front Camera'
@@ -304,9 +307,16 @@ async function updateCamera(session) {
     session.play('live'); // Start live output on "live-canvas"
     session.pause('capture'); // Pause capture output on "canvas"
 
-    document.getElementById('captureButton').addEventListener('click', function () {
-        capturePhoto(); //alsp trigger when API capture
-    });
+    document.getElementById('captureButton').style.display = 'none';
+    // document.getElementById('captureButton').addEventListener('click', function () {
+    //     console.log('captureButton click');
+    //     console.log('canClickCanvas '+canClickCanvas);
+    //     if (canClickCanvas) {
+    //         canClickCanvas = false;
+    //         // clickCanvasCapture(); //baba debug
+    //     }
+    //     // capturePhoto(); //also trigger when API capture
+    // });
 
 
 
@@ -340,7 +350,7 @@ async function capturePhoto() {
     }
     //WEB
     else {
-        clickCanvasCapture();
+        // clickCanvasCapture(); //baba debug
         document.getElementById('captureButton').style.display = 'none';
         await startCountdown();
 
@@ -486,12 +496,13 @@ function replaceCanvasWithScreenshot() {
         document.getElementById('live-canvas').style.display = 'block';
         document.getElementById('canvas').style.display = 'none';
         // Show capture button, hide action buttons
-        document.getElementById('captureButton').style.display = 'block';
+        // document.getElementById('captureButton').style.display = 'block'; //baba debug
         document.getElementById('btn-back').style.display = 'none';
         document.getElementById('btn-download').style.display = 'none';
         // Resume live output, pause capture output
         session.play('live');
         session.pause('capture');
+        canClickCanvas = true;
     });
 }
 
@@ -564,6 +575,7 @@ function removeDataUrlToSend() {
 }
 
 function clickCanvasCapture(relX = 0.5, relY = 0.93) {
+    console.log('clickCanvasCapture enter')
     const canvas = document.getElementById('live-canvas');
     if (!canvas) return;
 
