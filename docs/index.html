@@ -18,23 +18,66 @@
         <img id="intro-logo" src="assets/logo.png" alt="">
         <div id="intro-text-1" class="intro-text">
           VIRTUAL TRY ON<br><br>
-          Discover your iconic look in real time<br><br>
+          <span class="lg-en"> Discover your iconic look in real time</span>
+          <span class="lg-it"> Scopri il tuo look iconico in tempo reale</span>
+          <br><br>
         </div>
         <div id="intro-text-2" class="intro-text">
-          To personalize your experience, we’ll access your device camera. <br><br>
-          Your image will only be used to display<br> the selected look, it won’t be saved or shared.<br><br>
+          <span class="lg-en"> To personalize your experience, we’ll access your device camera. </span>
+          <span class="lg-it"> Per personalizzare l'esperienza, dai accesso alla fotocamera del tuo dispositivo. </span>
+          <br><br>
+          <span class="lg-en"> Your image will only be used to display<br> the selected look, it won’t be saved or shared.</span>
+          <span class="lg-it"> La tua immagine verrà utilizzata esclusivamente per visualizzare il look selezionato, non verrà salvata o condivisa</span>
+
+          <br><br>
         </div>
         <div id="intro-spacer"></div>
 
         <div id="intro-buttons">
-          <button class="button-1" id="btn-agree" role="button">Agree and Proceed</button>
-          <button class="button-1" id="btn-cancel" role="button">Cancel</button>
+          <button class="button-1" id="btn-agree" role="button">
+            <span class="lg-en"> Agree and Proceed</span>
+            <span class="lg-it"> Accetta e Procedi</span>
+          </button>
+          <button class="button-1" id="btn-cancel" role="button">
+            <span class="lg-en"> Cancel </span>
+            <span class="lg-it"> Annulla </span>
+          </button>
 
         </div>
         <div id="intro-text-3" class="intro-text">
-          By continuing, you confirm you are at least 16 years old and accept our <u>Privacy Policy</u>.<br><br>
+          <span class="lg-en"> By continuing, you confirm you are at least 16 years old and accept our <u>Privacy Policy</u>.</span>
+          <span class="lg-it"> Continuando, confermi di avere almeno 16 anni e accetti la nostra <u>Politica sulla Privacy</u>.</span>
+          <br><br>
         </div>
       </div>
+
+
+      <script>
+        // Function to get URL parameters
+        function getUrlParameter(name) {
+          const params = new URLSearchParams(window.location.search);
+          return params.get(name);
+        }
+
+        // Get the language from URL param or default to 'en'
+        const lang = getUrlParameter('lg') || 'en';
+
+        // Select all elements with class lg-en or lg-it
+        const langElements = document.querySelectorAll('.lg-en, .lg-it');
+
+        langElements.forEach(el => {
+          // If the element's class matches the lang, show it
+          if (el.classList.contains(`lg-${lang}`)) {
+            el.style.display = '';
+          } else {
+            // Otherwise, hide it
+            el.style.display = 'none';
+          }
+        });
+      </script>
+
+
+
       <!-- HTML !-->
     </div>
     <div id="ui-capture">
