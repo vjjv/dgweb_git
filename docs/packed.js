@@ -30859,14 +30859,14 @@ function startCountdown() {
         const countdownNumber = document.querySelector('.countdown-number');
         const circle = document.querySelector('.countdown-circle circle');
         countdownEl.style.display = 'block';
-        countdownNumber.textContent = '5';
+        countdownNumber.textContent = '3';
 
         // Start circle animation
         circle.style.animation = 'none';
         void circle.offsetWidth; // Force reflow
-        circle.style.animation = 'countdown 5s linear forwards';
+        circle.style.animation = 'countdown 3s linear forwards';
 
-        let count = 5;
+        let count = 3;
         const intervalId = setInterval(function () {
             count--;
             countdownNumber.textContent = count;
