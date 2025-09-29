@@ -1,3 +1,5 @@
+//9bb74ad8-990a-4356-a1d7-54ff36ef7e88 : WEB MINIMAL
+
 // window.lensID = 'b8e614e9-bd59-429b-94a8-05ae9385210a'; //Third Sky Lens;
 // window.groupID = 'f7f4e367-f4b3-4de5-8e81-e9c842f2bf0b'; //LIVE_PROD Group;
 // window.modePhoto = true;
@@ -7,6 +9,17 @@
 
 
 const params = new URLSearchParams(window.location.search);
+
+const isMinimalVersion = params.get('minimal') === 'true';
+if(isMinimalVersion){
+  console.log('IS MINIMAL TRUE');
+  
+  // document.getElementById('btn-cross').style.display = 'none';
+  // document.getElementById('captureButton').style.display = 'none';
+
+  document.getElementById('btn-cross').style.transform = 'scale(0)';
+  document.getElementById('captureButton').style.transform = 'scale(0)';
+}
 
 function getURLorFallback(key, defaultValue) {
   if (params.has(key)) {
@@ -28,7 +41,7 @@ window.modeVideo = getURLorFallback('modeVideo', false);
 window.modeBothCamera = getURLorFallback('modeBothCamera', false);
 window.modeStartFaceCamera = getURLorFallback('modeStartFaceCamera', true);
 window.isArMirror = getURLorFallback('isArMirror', false); //change to undefined to skip intro or '0' for d&g project
-window.splashScreen = getURLorFallback('splashScreen', '0'); //change to undefined to skip intro or '0' for d&g project
+window.splashScreen = getURLorFallback('splashScreen', isMinimal ? undefined : '0'); //change to undefined to skip intro or '0' for d&g project
 
 
 console.log('lensID : ' + window.lensID);
